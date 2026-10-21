@@ -1,6 +1,8 @@
 package db
 
 import "core:c"
+import "core:fmt"
+
 import "vendors:mysql"
 import "vendors:app/config"
 
@@ -45,7 +47,7 @@ get_rows :: proc(conn: ^mysql.MySQL, query: string) -> (res: []map[string]string
 
 		new_item := make(map[string]string)
 		for j := 0; j < int(nfs); j += 1 {
-			new_item[string(fields[j].name)] = string(row[j])
+			new_item[string(fields[j].name)] = fmt.tprintf("%v", row[j])
 		}
 
 		items[i] = new_item
