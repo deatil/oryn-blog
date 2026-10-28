@@ -47,7 +47,8 @@ get_rows :: proc(conn: ^mysql.MySQL, query: string) -> (res: []map[string]string
 
 		new_item := make(map[string]string)
 		for j := 0; j < int(nfs); j += 1 {
-			new_item[string(fields[j].name)] = fmt.tprintf("%v", row[j])
+			key_v := fmt.tprintf("%v", fields[j].name)
+			new_item[key_v] = fmt.tprintf("%v", row[j])
 		}
 
 		items[i] = new_item

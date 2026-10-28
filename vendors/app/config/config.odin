@@ -8,3 +8,5 @@ Mysql_Passwd := "123456"
 Mysql_DB := "oboard"
 Mysql_Port := 3306
 Mysql_CS_Name := "utf8mb4"
+
+View_Path := "resources/view"

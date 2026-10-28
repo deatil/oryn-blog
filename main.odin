@@ -5,7 +5,11 @@ import "core:log"
 import "core:net"
 
 import "vendors:http"
+import "vendors:jinja"
+
+import "vendors:app/db"
 import "vendors:app/config"
+import "vendors:app/global"
 import app_router "vendors:app/router"
 
 // odin run . -collection:vendors=vendors
@@ -20,6 +24,13 @@ main :: proc() {
 	router: http.Router
 	http.router_init(&router)
 	defer http.router_destroy(&router)
+
+	global.conn = db.init()
+	defer db.close(global.conn)
+
+    env := jinja.create_environment({autoescape = true, loader = jinja.filesystem_loader({config.View_Path})})
+	global.view = &env
+    defer jinja.destroy_environment(global.view)
 
 	app_router.route(&router)
 

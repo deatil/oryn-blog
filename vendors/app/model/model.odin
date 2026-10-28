@@ -20,14 +20,14 @@ get_commit_one :: proc(id: string) -> map[string]string {
 }
 
 get_commit_count :: proc() -> string {
-	query := fmt.tprintf("SELECT * FROM commits count(id) as n LIMIT 1")
+	query := fmt.tprintf("SELECT count(id) as n FROM commits LIMIT 1")
 	item, _ := db.get_one(global.conn, query)
 
 	return item["n"]
 }
 
 update_commit :: proc(id: string, data: map[string]string) -> bool {
-	query := fmt.tprintf("UPDATE commits SET title = %s, content = %s, add_time = %s WHERE id = %s", data["title"], data["content"], data["add_time"], id)
+	query := fmt.tprintf("UPDATE commits SET title = '%s', content = '%s', add_time = %s WHERE id = %s", data["title"], data["content"], data["add_time"], id)
 	_, err := db.query(global.conn, query)
 	if err != "" {
 		return false
@@ -47,7 +47,7 @@ delete_commit :: proc(id: string) -> bool {
 }
 
 add_commit :: proc(data: map[string]string) -> bool {
-	query := fmt.tprintf("INSERT INTO commits (title, content, add_time) VALUES (%s, %s, %s)", data["title"], data["content"], data["add_time"])
+	query := fmt.tprintf("INSERT INTO commits (title, content, add_time) VALUES ('%s', '%s', %s)", data["title"], data["content"], data["add_time"])
 	_, err := db.query(global.conn, query)
 	if err != "" {
 		return false

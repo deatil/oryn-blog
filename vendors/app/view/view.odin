@@ -2,27 +2,29 @@ package view
 
 import "core:os"
 import "core:fmt"
+import "core:time"
+import "core:strings"
+import "core:strconv"
 import "core:encoding/json"
 
-import "vendors:mustache"
+import "vendors:jinja"
+import "vendors:app/global"
 
-// import "core:fmt"
-// import "core:encoding/json"
-//
-// datas, _ :=json.marshal(items)
-// fmt.println(transmute(string)datas)
-render :: proc(template: string, data: any) -> (s: string, errstr: string) {
-	tpl, err := read_file(template)
-	if err != nil {
-		return "", os.error_string(err)
+// ctx := jinja.dict()
+// jinja.set(ctx, "title", jinja.str("Hello <World>"))
+// jinja.set(ctx, "pages", jinja.list(jinja.str("a"), jinja.str("b")))
+render :: proc(template: string, ctx: jinja.Value) -> (s: string, errstr: string) {
+    t, err := jinja.load_template(global.view, template) 
+    if err.kind != .None { 
+		return "", jinja.format_error(err); 
 	}
 
-	output, err2 := mustache.render(transmute(string)tpl, data)
-	if err2 != nil {
-		return "", fmt.tprintf("%v", err2)
+    out, rerr := jinja.render(&t, ctx)
+    if rerr.kind != .None { 
+		return "", jinja.format_error(rerr); 
 	}
 
-	return output, ""
+	return out, ""
 }
 
 // bytes := transmute([]byte)str
@@ -69,43 +71,18 @@ marshal_json :: proc(v: any, opt: json.Marshal_Options = {}) -> (data: string, e
 	return string(datas), ""
 }
 
-load_json_string :: proc(val: string) -> (loaded: JSON_Data, errstr: string) {
-	v, err := json.parse_string(val)
-	if err != nil {
-		return nil, fmt.tprintf("%v", err)
-	}
+time_to_string :: proc(t: string) -> (str: string) {
+	n, _ := strconv.parse_i64_of_base(t, 10)
+	tt := time.unix(n, 0)
 
-	data := load_json(v)
-	return data, ""
+	buf: [time.MIN_YYYY_DATE_LEN]u8
+	ymd_str := time.to_string_yyyy_mm_dd(tt, buf[:])
+
+	buf2: [time.MIN_HMS_LEN]u8
+	hms_str := time.to_string_hms(tt, buf2[:])
+
+	time_str := fmt.tprintf("%s %s", ymd_str, hms_str)
+	return time_str
 }
 
-load_json :: proc(val: json.Value) -> (loaded: JSON_Data) {
-	context.allocator = context.temp_allocator
-
-	switch _val in val {
-	case bool, string:
-		v := fmt.tprintf("%v", _val)
-		loaded = v
-	case i64, f64:
-		str := fmt.tprintf("%.2f", val)
-		decimal_str := mustache.trim_decimal_string(str)
-		loaded = decimal_str
-	case json.Object:
-		data := make(JSON_Map)
-		for k, v in _val {
-			new_k := fmt.tprintf("%v", k)
-			data[new_k] = load_json(v)
-		}
-		loaded = data
-	case json.Array:
-		data := make(JSON_List)
-		for v in _val {
-			append(&data, load_json(v))
-		}
-		loaded = data
-	case json.Null:
-	}
-
-	return loaded
-}
 
