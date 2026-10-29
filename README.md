@@ -5,5 +5,5 @@ A web with odin lang.
 ## Test
 
 ~~~sh
-odin run . -collection:vendors=vendors
+odin run . -collection:oryn=oryn
 ~~~

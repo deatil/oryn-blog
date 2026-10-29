@@ -14,7 +14,8 @@
     </h1>
 
     <div>
-        <a href="/add">Add</a>
+        <a href="/add">Add</a> 
+        <span>count: {{ count }}</span>
     </div>
 
     <div>
@@ -26,6 +27,8 @@
                 <a href="/del/{{d.id}}">del</a>
                 <br/>
                 content: {{d.content}}
+                <br/>
+                time: {{ time_format(d.add_time) }}
                 <br/>
             </li>
             {% endfor %}

@@ -4,15 +4,17 @@ import "core:fmt"
 import "core:log"
 import "core:net"
 
-import "vendors:http"
-import "vendors:jinja"
+import "oryn:http"
+import "oryn:jinja"
 
-import "vendors:app/db"
-import "vendors:app/config"
-import "vendors:app/global"
-import app_router "vendors:app/router"
+import "oryn:app/db"
+import "oryn:app/config"
+import "oryn:app/global"
+import "oryn:app/view"
+import app_router "oryn:app/router"
 
-// odin run . -collection:vendors=vendors
+// run test:
+// > odin run . -collection:oryn=oryn
 main :: proc() {
 	context.logger = log.create_console_logger(.Info)
 
@@ -28,9 +30,14 @@ main :: proc() {
 	global.conn = db.init()
 	defer db.close(global.conn)
 
-    env := jinja.create_environment({autoescape = true, loader = jinja.filesystem_loader({config.View_Path})})
+    env := jinja.create_environment({
+		autoescape = true, 
+		loader = jinja.filesystem_loader({config.View_Path}),
+	})
 	global.view = &env
     defer jinja.destroy_environment(global.view)
+
+	view.add_functions()
 
 	app_router.route(&router)
 
@@ -38,6 +45,10 @@ main :: proc() {
 
 	log.info("Listening on http://localhost:6969")
 
-	err := http.listen_and_serve(&s, routed, net.Endpoint{address = net.IP4_Loopback, port = config.Server_Port})
+	err := http.listen_and_serve(&s, routed, net.Endpoint{
+		address = net.IP4_Loopback, 
+		port = config.Server_Port,
+	})
+
 	fmt.assertf(err == nil, "server stopped with error: %v", err)
 }
