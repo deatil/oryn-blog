@@ -1,28 +1,23 @@
 package router
 
-import "oryn:http"
-import "oryn:app/controller"
-import admin_controller "oryn:app/controller/admin"
+import gh "oryn:gjallarhorn"
 
-route :: proc(router: ^http.Router) {
-	http.route_get(router, "/", http.handler(controller.index))
-	http.route_get(router, "/view/(%d+)", http.handler(controller.view))
+import "oryn:app/config"
+import admin "oryn:app/controller/admin"
 
-	http.route_get(router, "/edit/(%d+)", http.handler(controller.edit))
-	http.route_post(router, "/edit/(%d+)", http.handler(controller.edit_save))
+route :: proc(app: ^gh.App) {
+	admin_route(app)
 
-	http.route_get(router, "/add", http.handler(controller.add))
-	http.route_post(router, "/add", http.handler(controller.add_save))
-
-	http.route_get(router, "/del/(%d+)", http.handler(controller.del))
-
-	admin_route(router)
-
-	// static
-	http.route_get(router, "(.*)", http.handler(controller.static))
+	gh.hail(app, "/static", config.Static_Path)
 }
 
-admin_route :: proc(router: ^http.Router) {
-	http.route_get(router, "/admin/auth/login", http.handler(admin_controller.auth_login))
-	http.route_post(router, "/admin/auth/login", http.handler(admin_controller.auth_login_save))
+admin_route :: proc(app: ^gh.App) {
+	gh.get(app, "/admin/index", admin.index_index)
+	gh.get(app, "/admin/console", admin.index_console)
+	gh.get(app, "/admin/menus", admin.index_menus)
+
+	// auth
+	gh.get(app, "/admin/auth/login", admin.auth_login)
+	gh.post(app, "/admin/auth/login", admin.auth_login_save)
+	gh.get(app, "/admin/auth/logout", admin.auth_logout)
 }

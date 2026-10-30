@@ -6,7 +6,10 @@ import "oryn:app/db"
 import "oryn:app/global"
 
 get_admin :: proc(username: string) -> map[string]string {
-	query := fmt.tprintf("SELECT * FROM commits WHERE username = '%s' LIMIT 1", username)
+	query := fmt.tprintf(
+		"SELECT * FROM %s WHERE username = '%s' LIMIT 1", 
+		table_name("admin"), username
+	)
 	item, err := db.get_one(global.conn, query)
 	if err != "" {
 		return nil

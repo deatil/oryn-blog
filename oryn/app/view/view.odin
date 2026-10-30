@@ -1,10 +1,51 @@
 package view
 
-import "oryn:http"
+import "core:fmt"
+import "core:time"
+import "core:encoding/json"
+
 import "oryn:jinja"
+import gh "oryn:gjallarhorn"
 
 import "oryn:app/global"
 import "oryn:app/utils"
+
+return_html :: proc(b: ^gh.Bifrost, body: string) {
+	gh.write_response(b, 200, "text/html", body)
+}
+
+return_text :: proc(b: ^gh.Bifrost, body: string) {
+	gh.text(b, 200, body)
+}
+
+return_json_raw :: proc(b: ^gh.Bifrost, body: string) {
+	gh.write_response(b, 200, "application/json", body)
+}
+
+return_json :: proc(b: ^gh.Bifrost, v: any) {
+	gh.json(b, 200, v)
+}
+
+return_success :: proc(b: ^gh.Bifrost, message: string, data: json.Value = "") {
+	v := make(map[string]json.Value)
+	v["code"] = 0
+	v["message"] = message
+	v["data"] = data
+
+	return_json(b, v)
+}
+
+return_error :: proc(b: ^gh.Bifrost, message: string, code: i64 = 1) {
+	v := make(map[string]json.Value)
+	v["code"] = code
+	v["message"] = message
+
+	return_json(b, v)
+}
+
+redirect :: proc(b: ^gh.Bifrost, url: string) {
+	gh.redirect(b, url)
+}
 
 // ctx := jinja.dict()
 // jinja.set(ctx, "title", jinja.str("Hello <World>"))
@@ -23,31 +64,21 @@ render :: proc(template: string, ctx: jinja.Value) -> (s: string, errstr: string
 	return out, ""
 }
 
-return_json :: proc(r: ^http.Response, v: any) {
-	http.respond_json(r, v)
-}
-
-return_success :: proc(r: ^http.Response, message: string, data: any = "") {
-	v := make(map[string]any)
-	v["code"] = 0
-	v["message"] = message
-	v["data"] = data
-	http.respond_json(r, v)
-}
-
-return_error :: proc(r: ^http.Response, message: string, code: int = 1) {
-	v := make(map[string]any)
-	v["code"] = code
-	v["message"] = message
-	http.respond_json(r, v)
-}
-
 add_functions :: proc() {
 	jinja.add_function(global.view, "time_format", fn_time_format) 
+	jinja.add_function(global.view, "now_time", fn_now_time) 
 }
 
 fn_time_format :: proc(c: ^jinja.Call) -> jinja.Value {
 	str := jinja.to_string(c.args[0])
+	time_str := utils.time_to_string(str)
+
+	return jinja.str(time_str) 
+}
+
+fn_now_time :: proc(c: ^jinja.Call) -> jinja.Value {
+	now := time.now()
+	str := fmt.tprintf("%v", time.to_unix_seconds(now))
 	time_str := utils.time_to_string(str)
 
 	return jinja.str(time_str) 

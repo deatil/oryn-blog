@@ -1,4 +1,9 @@
-﻿
+﻿# Host: localhost  (Version: 5.7.44)
+# Date: 2026-10-30 00:28:26
+# Generator: MySQL-Front 5.3  (Build 4.234)
+
+/*!40101 SET NAMES utf8 */;
+
 #
 # Structure for table "commits"
 #
@@ -17,7 +22,7 @@ CREATE TABLE `commits` (
 #
 
 /*!40000 ALTER TABLE `commits` DISABLE KEYS */;
-INSERT INTO `commits` VALUES (1,'kll','klluuuu',1739783728),(2,'kll2','klluuuu',1739783728),(3,'kll36','klluuuu',1793206379),(5,'oo2','yy2',1793255507),(6,'ppp3','oooo3',1793256082);
+INSERT INTO `commits` VALUES (1,'kll','klluuuu',1739783728),(2,'kll2','klluuuu',1739783728),(3,'kll36','klluuuu',1793206379),(5,'oo2','yy2',1793255507),(6,'ppp3','$argon2id$v=19$m=19456,t=2,p=1$yRzfKjab7RTceBaEoSeJyw$FMNCN4mof9qhWOqmhCz9lpJ1iDhylgFlRAXDsj2Yd/s',1793291184);
 /*!40000 ALTER TABLE `commits` ENABLE KEYS */;
 
 #
@@ -28,7 +33,7 @@ DROP TABLE IF EXISTS `oryn_admin`;
 CREATE TABLE `oryn_admin` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '账号，大小写字母数字',
-  `password` varchar(70) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `password` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '密码',
   `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
@@ -39,7 +44,7 @@ CREATE TABLE `oryn_admin` (
 #
 
 /*!40000 ALTER TABLE `oryn_admin` DISABLE KEYS */;
-INSERT INTO `oryn_admin` VALUES (1,'admin','$bcrypt$r=5$Qpw5YcBXSwT5VZqVzTNdBA$XCs/K6s2vYmoHqNcGkJLRXPW7CW+Th8',1793256082);
+INSERT INTO `oryn_admin` VALUES (1,'admin','$argon2id$v=19$m=19456,t=2,p=1$yRzfKjab7RTceBaEoSeJyw$FMNCN4mof9qhWOqmhCz9lpJ1iDhylgFlRAXDsj2Yd/s',1793256082);
 /*!40000 ALTER TABLE `oryn_admin` ENABLE KEYS */;
 
 #

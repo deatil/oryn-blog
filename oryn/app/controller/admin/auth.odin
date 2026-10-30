@@ -3,49 +3,50 @@ package admin
 import "core:fmt"
 import "core:time"
 
-import "oryn:http"
 import "oryn:jinja"
+import gh "oryn:gjallarhorn"
 
+import "oryn:app/auth"
 import "oryn:app/view"
 import "oryn:app/model"
 import "oryn:app/utils"
 
-auth_login :: proc(req: ^http.Request, res: ^http.Response) {
+auth_login :: proc(b: ^gh.Bifrost) {
+	ok := auth.admin_require_login(b)
+	if ok {
+		view.redirect(b, "/admin/index")
+		return;
+	}
+
 	data := jinja.dict()
 	output, _ := view.render("admin/auth/login.html", data)
 
-	http.respond_html(res, output)
+	view.return_html(b, output)
 }
 
-auth_login_save :: proc(req: ^http.Request, res: ^http.Response) {
-	ud: User_Data
-	ud.req = req
-	ud.res = res
+auth_login_save :: proc(b: ^gh.Bifrost) {
+	fields := gh.form(b)
 
-	http.body(req, 5000, &ud, proc(user_data: rawptr, body: http.Body, err: http.Body_Error) {
-		ud2 := cast(^User_Data)user_data
+	username := fields["username"]
+	password := fields["password"]
 
-		if err != nil {
-			http.respond(ud2.res, http.body_error_status(err))
-			return
-		}
+	info := model.get_admin(username)
+	if len(info) == 0 {
+		view.return_error(b, "登陆失败")
+		return
+	}
 
-		form, _ := http.body_url_encoded(body)
-	
-		username := form["username"]
-		password := form["password"]
+	if !utils.verify_password(password, info["password"]) {
+		view.return_error(b, "登陆失败")
+		return
+	}
 
-		info := model.get_admin(username)
-		if info == nil {
-			view.return_error(ud2.res, "login error")
-			return
-		}
+	auth.admin_login(b, username)
 
-		if !utils.verify_password(password, info["password"]) {
-			view.return_error(ud2.res, "login error")
-			return
-		}
+	view.return_success(b, "登陆成功")
+}
 
-		view.return_success(ud2.res, "login success")
-	})
+auth_logout :: proc(b: ^gh.Bifrost) {
+	auth.admin_logout(b)
+	view.redirect(b, "/admin/auth/login")
 }

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>后台管理 - 后台管理系统</title>
+  <meta name="renderer" content="webkit|ie-comp|ie-stand">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="shortcut icon" href="/static/admin/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/static/admin/css/font.css">
+  <link rel="stylesheet" href="/static/admin/css/weadmin.css">
+
+  <script type="text/javascript" src="/static/admin/layui/layui.js" charset="utf-8"></script>
+  <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+  <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+<body>
+  <!-- 顶部开始 -->
+  <div class="container">
+    <div class="logo">
+      <a href="./index.html">Oryn</a>
+    </div>
+    <div class="left_open">
+      <!-- <i title="展开左侧栏" class="iconfont">&#xe699;</i> -->
+      <i title="展开左侧栏" class="layui-icon layui-icon-shrink-right"></i>
+
+    </div>
+    <ul class="layui-nav left fast-add" lay-filter="">
+      <li class="layui-nav-item">
+        <a href="javascript:;">+新增</a>
+        <dl class="layui-nav-child">
+          <!-- 二级菜单 -->
+          <dd>
+            <a onclick="WeAdminShow('文章','/admin/article/index')"><i class="layui-icon layui-icon-list"></i>文章</a>
+          </dd>
+          <dd>
+            <a onclick="WeAdminShow('账号','/admin/user')"><i class="layui-icon layui-icon-user"></i>账号</a>
+          </dd>
+        </dl>
+      </li>
+    </ul>
+    <ul class="layui-nav right" lay-filter="">
+      <li class="layui-nav-item">
+        <a href="javascript:;">{{ username }}</a>
+        <dl class="layui-nav-child">
+          <!-- 二级菜单 -->
+          <dd>
+            <a onclick="WeAdminShow('个人信息','/admin/profile')" href="javascript:;">个人信息</a>
+          </dd>
+          <dd>
+            <a class="loginout" href="/admin/auth/logout">退出</a>
+          </dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item to-index">
+        <a href="/" target="_blank">前台首页</a>
+      </li>
+    </ul>
+
+  </div>
+  <!-- 顶部结束 -->
+  <!-- 中部开始 -->
+  <!-- 左侧菜单开始 -->
+  <div class="left-nav">
+    <div id="side-nav"></div>
+  </div>
+  <!-- <div class="x-slide_left"></div> -->
+  <!-- 左侧菜单结束 -->
+  <!-- 右侧主体开始 -->
+  <div class="page-content">
+    <div class="layui-tab tab" lay-filter="wenav_tab" id="WeTabTip" lay-allowclose="true">
+      <ul class="layui-tab-title" id="tabName">
+        <li>我的桌面</li>
+      </ul>
+      <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+          <iframe src='/admin/console' frameborder="0" scrolling="yes" class="weIframe"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-content-bg"></div>
+  <!-- 右侧主体结束 -->
+  <!-- 中部结束 -->
+  <!-- 底部开始 -->
+  <div class="footer" id="footer" style="display: none;">
+    <div class="copyright">Copyright ©2026 Oryn-Blog v1.0 All Rights Reserved</div>
+  </div>
+  <!-- 底部结束 -->
+  <script type="text/javascript">
+    var showFooter = true; // 控制是否显示底部示例参数，相关逻辑可删除
+    layui.config({
+      base: '/static/admin/js/'
+      , version: '101100'
+    }).extend({ //设定模块别名
+      admin: 'admin'
+      , menu: 'menu'
+      , http: 'http'
+    });
+    layui.use(['jquery', 'admin', 'menu', 'http'], function () {
+      var $ = layui.jquery,
+        admin = layui.admin,
+        http = layui.http,
+        menu = layui.menu;
+
+      $(function () {
+        // http.getMenu();
+        admin.tab.tabInit();
+        menu.getMenu('/admin/menus');
+
+        if (showFooter) {
+          var currentY = new Date().getFullYear();
+          $('.copyright').html('Copyright ©2018-' + currentY + ' WeAdmin v1.6 All Rights Reserved');
+          $('#footer').show();
+        } else {
+          $('.left-nav, .page-content').css({ 'bottom': 0 });
+          $('#footer').hide();
+        }
+      });
+    });
+
+  </script>
+</body>
+<!--Tab菜单右键弹出菜单-->
+<ul class="rightMenu" id="rightMenu">
+  <li data-type="fresh">刷新</li>
+  <li data-type="current">关闭当前</li>
+  <li data-type="other">关闭其它</li>
+  <li data-type="all">关闭所有</li>
+</ul>
+
+</html>

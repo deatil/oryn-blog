@@ -7,3 +7,5 @@ A web with odin lang.
 ~~~sh
 odin run . -collection:oryn=oryn
 ~~~
+
+https://gitee.com/lovetime/WeAdmin
