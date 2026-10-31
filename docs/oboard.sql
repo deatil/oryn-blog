@@ -1,29 +1,8 @@
 ﻿# Host: localhost  (Version: 5.7.44)
-# Date: 2026-10-30 00:28:26
+# Date: 2026-11-01 00:22:44
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
-
-#
-# Structure for table "commits"
-#
-
-DROP TABLE IF EXISTS `commits`;
-CREATE TABLE `commits` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(200) CHARACTER SET utf8 DEFAULT '',
-  `content` text COLLATE utf8_unicode_ci,
-  `add_time` int(10) DEFAULT '0' COMMENT '添加时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-#
-# Data for table "commits"
-#
-
-/*!40000 ALTER TABLE `commits` DISABLE KEYS */;
-INSERT INTO `commits` VALUES (1,'kll','klluuuu',1739783728),(2,'kll2','klluuuu',1739783728),(3,'kll36','klluuuu',1793206379),(5,'oo2','yy2',1793255507),(6,'ppp3','$argon2id$v=19$m=19456,t=2,p=1$yRzfKjab7RTceBaEoSeJyw$FMNCN4mof9qhWOqmhCz9lpJ1iDhylgFlRAXDsj2Yd/s',1793291184);
-/*!40000 ALTER TABLE `commits` ENABLE KEYS */;
 
 #
 # Structure for table "oryn_admin"
@@ -48,28 +27,60 @@ INSERT INTO `oryn_admin` VALUES (1,'admin','$argon2id$v=19$m=19456,t=2,p=1$yRzfK
 /*!40000 ALTER TABLE `oryn_admin` ENABLE KEYS */;
 
 #
-# Structure for table "oryn_comment"
+# Structure for table "oryn_art"
 #
 
-DROP TABLE IF EXISTS `oryn_comment`;
-CREATE TABLE `oryn_comment` (
+DROP TABLE IF EXISTS `oryn_art`;
+CREATE TABLE `oryn_art` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '账号ID',
-  `topic_id` int(10) NOT NULL DEFAULT '0' COMMENT '话题ID',
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
-  `status` tinyint(3) DEFAULT '0' COMMENT '状态，1-启用',
+  `cate_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '分类ID',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '作者',
+  `title` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标题',
+  `keywords` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '关键字',
+  `description` varchar(200) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '描述',
+  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
+  `tags` varchar(250) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '标签',
+  `from` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '来源',
+  `views` bigint(20) unsigned DEFAULT '1' COMMENT '阅读量',
+  `is_top` tinyint(1) unsigned DEFAULT '0' COMMENT '1-置顶',
+  `status` tinyint(1) DEFAULT '1' COMMENT '1-启用，0-禁用',
   `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `add_ip` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '添加IP',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='评论';
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='文章';
 
 #
-# Data for table "oryn_comment"
+# Data for table "oryn_art"
 #
 
-/*!40000 ALTER TABLE `oryn_comment` DISABLE KEYS */;
-INSERT INTO `oryn_comment` VALUES (1,3,3,'testsert1211',1,1739779230,'127.0.0.1'),(2,6,3,'qweqwe',1,1739779230,'0.0.0.0'),(3,6,3,'333rftgd22',1,1739779230,'0.0.0.0'),(4,6,3,'tyuhj',1,1739779230,''),(5,6,3,'tyuhj',1,1739779230,''),(6,6,3,'tyuhj',1,1739779230,''),(8,6,3,'简易论坛8',1,1739779230,'0.0.0.0'),(11,6,3,'tyuhj',1,1739779230,''),(12,6,3,'tyuhj',1,1739779230,''),(13,6,3,'tyuhj',1,1739779230,''),(14,6,3,'tyuhj',1,1739779230,''),(15,6,3,'tyuhj',1,1739779230,''),(16,6,3,'tyuhj',1,1739779230,''),(17,6,3,'tyuhj',1,1739779230,''),(18,6,3,'tyuhj',1,1739779230,''),(19,6,3,'tyuhj',1,1739779230,''),(21,6,3,'tyuhj',1,1739779230,''),(22,6,3,'tyuhj',1,1739779230,''),(23,6,3,'tyuhj',1,1739779230,''),(24,6,3,'tyuhj',1,1739779230,''),(25,6,3,'tyuhj',1,1739779230,''),(26,1,6,'123',1,1739779515,''),(27,1,8,'cesgi2',1,1739786330,'0.0.0.0'),(28,1,8,'123qwew',1,1739786339,''),(29,1,8,'123qwew',1,1739786339,''),(30,4,16,'222',1,1791560874,''),(31,4,8,'33333',1,1791560901,''),(32,4,8,'555',1,1791560920,''),(33,4,17,'123',1,1791560945,''),(34,5,18,'222',1,1791646745,''),(35,7,19,'777',1,1791912333,''),(36,11,19,'66',1,1792085299,'');
-/*!40000 ALTER TABLE `oryn_comment` ENABLE KEYS */;
+/*!40000 ALTER TABLE `oryn_art` DISABLE KEYS */;
+INSERT INTO `oryn_art` VALUES (2,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',8,0,1,1655300840,'127.0.0.1'),(3,1,2,'测试','据说今天下雨','据说今天下雨','<p>测试文章</p>','测试文章','网络',4,0,1,1655823356,'127.0.0.1'),(4,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',8,0,1,1655560040,'127.0.0.1'),(5,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',8,0,1,1655387240,'127.0.0.1'),(7,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',8,0,1,1655646440,'127.0.0.1'),(8,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',12011206,0,1,1656164840,'127.0.0.1'),(9,1,1,'据说今天下雨，有明星没带伞被雨淋了','下雨,明星','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','明星,下雨,搞笑','网络',54,0,1,1656596840,'127.0.0.1'),(11,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',11,0,1,1655560040,'127.0.0.1'),(12,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','美女','网络',18,0,1,1655560040,'127.0.0.1'),(13,1,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',9,0,1,1655560040,'127.0.0.1'),(14,6,1,'据说今天下雨，有明星没带伞被雨淋了','据说今天下雨','据说今天下雨，有明星没带伞被雨淋了','<p>据说今天下雨，有明星没带伞被雨淋了123</p><p><img src=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" alt=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" data-href=\"/upload/images/78a1b859e4ce392cd5e8fa430382f90a.jpg\" style=\"\"/></p>','八卦,娱乐','网络',25,0,1,1655560040,'127.0.0.1'),(15,1,1,'测试测试123','测试测试123','测试测试123','<p>测试测试123</p>','测试','管理员',5,0,1,1655912049,'127.0.0.1'),(16,1,1,'娱乐圈真的是个圈啊','娱乐圈真的是个圈啊','娱乐圈真的是个圈啊','<p>娱乐圈真的是个圈啊</p>','娱乐圈','管理员',9,1,1,1656170725,'127.0.0.1');
+/*!40000 ALTER TABLE `oryn_art` ENABLE KEYS */;
+
+#
+# Structure for table "oryn_cate"
+#
+
+DROP TABLE IF EXISTS `oryn_cate`;
+CREATE TABLE `oryn_cate` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '名称',
+  `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标志',
+  `desc` varchar(200) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '描述',
+  `sort` int(5) DEFAULT '100' COMMENT '排序',
+  `status` tinyint(1) DEFAULT '1' COMMENT '1-启用，0-禁用',
+  `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `add_ip` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '添加IP',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='分类';
+
+#
+# Data for table "oryn_cate"
+#
+
+/*!40000 ALTER TABLE `oryn_cate` DISABLE KEYS */;
+INSERT INTO `oryn_cate` VALUES (1,'热门八卦','rmbg','热门八卦热门八卦',100,1,1655823356,'127.0.0.1'),(6,'影视综合','video','影视综合',100,1,1655823356,'127.0.0.1'),(9,'诗词江湖','scjh','诗词江湖111',95,1,1655823356,'127.0.0.1');
+/*!40000 ALTER TABLE `oryn_cate` ENABLE KEYS */;
 
 #
 # Structure for table "oryn_setting"
@@ -90,53 +101,3 @@ CREATE TABLE `oryn_setting` (
 /*!40000 ALTER TABLE `oryn_setting` DISABLE KEYS */;
 INSERT INTO `oryn_setting` VALUES ('website_beian','','网站备案'),('website_copyright','zig-say','版权'),('website_description','zig-say 是使用 httpz, myzql 及 zmpl 的 zig 简易匿名社区系统','网站描述'),('website_keywords','zig-say,社区,社区论坛,简易论坛','网站关键字'),('website_name','zig-say','网站名称'),('website_stat','','统计代码'),('website_status','1','网站关闭状态'),('website_url','http://www.domain.com','网站链接');
 /*!40000 ALTER TABLE `oryn_setting` ENABLE KEYS */;
-
-#
-# Structure for table "oryn_topic"
-#
-
-DROP TABLE IF EXISTS `oryn_topic`;
-CREATE TABLE `oryn_topic` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '账号ID',
-  `title` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '密码',
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
-  `views` int(11) DEFAULT '0' COMMENT '阅读量',
-  `status` tinyint(3) DEFAULT '0' COMMENT '状态，1-启用',
-  `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
-  `add_ip` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '添加IP',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='话题';
-
-#
-# Data for table "oryn_topic"
-#
-
-/*!40000 ALTER TABLE `oryn_topic` DISABLE KEYS */;
-INSERT INTO `oryn_topic` VALUES (3,3,'zig 为什么老是返回的字符不是自己期望的数据','zig 为什么老是返回的字符不是自己期望的数据',1,1,1739779230,''),(5,3,'zig 会解决变量污染问题吗','zig 会解决变量污染问题吗',1,1,1739779230,''),(7,1,'zig 为什么会出现变量污染2','zig 为什么会出现变量污染2',2,1,1739779230,''),(8,1,'zig 什么时候把本地获取时区补上','zig 什么时候把本地获取时区补上',0,1,1739783728,''),(9,1,'zig 什么时候把本地获取时区补上','zig 什么时候把本地获取时区补上',0,1,1739783728,''),(10,1,'zig 什么时候把本地获取时区补上','zig 什么时候把本地获取时区补上',0,1,1739783728,''),(11,1,'zig 什么时候把本地获取时区补上2','zig 什么时候把本地获取时区补上2',1,1,1739783728,''),(13,1,'zig 什么时候把本地获取时区补上','zig 什么时候把本地获取时区补上',0,1,1739783728,''),(14,1,'zig 什么时候把本地获取时区补上','zig 什么时候把本地获取时区补上',0,1,1739783728,''),(15,1,'zig 什么时候把本地获取时区补上','zig 什么时候把本地获取时区补上',0,1,1739783728,''),(16,1,'zig 什么时候把本地获取时区补上','zig 什么时候把本地获取时区补上',0,1,1739783728,''),(18,5,'kkkkkkk','22222',0,1,1791646722,''),(19,7,'hhhhh','yyy',0,1,1791912316,''),(20,7,'999','88',0,1,1792075602,'');
-/*!40000 ALTER TABLE `oryn_topic` ENABLE KEYS */;
-
-#
-# Structure for table "oryn_user"
-#
-
-DROP TABLE IF EXISTS `oryn_user`;
-CREATE TABLE `oryn_user` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '账号，大小写字母数字',
-  `cookie` varchar(62) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '密码',
-  `sign` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '签名',
-  `status` tinyint(1) DEFAULT '1' COMMENT '1-启用，0-禁用',
-  `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
-  `add_ip` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '添加IP',
-  PRIMARY KEY (`id`),
-  KEY `cookie` (`cookie`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='用户';
-
-#
-# Data for table "oryn_user"
-#
-
-/*!40000 ALTER TABLE `oryn_user` DISABLE KEYS */;
-INSERT INTO `oryn_user` VALUES (1,'5d0e674217421f04c0cb6bd2','5d0e674217421f04c0cb6bd2','',1,1739779214,''),(2,'7162fc53f85d895c922f9df3','7162fc53f85d895c922f9df3','8',1,1739788731,''),(4,'2222e41227ddbdecd7085448','2222e41227ddbdecd7085448','',1,1791558432,''),(5,'0a784de6b1e1a59c0f9c6b1e','0a784de6b1e1a59c0f9c6b1e','',1,1791561010,''),(6,'yhygty87uj2','yhygty87uj2','uuu',1,1791646798,''),(7,'74c289898ca7ac5bbd3fc832','74c289898ca7ac5bbd3fc832','',1,1791912294,''),(8,'d8fd330ca705b4866fc35e52','d8fd330ca705b4866fc35e52','',1,1792076645,''),(9,'c571da14743623f39d6ce359','c571da14743623f39d6ce359','',1,1792076716,''),(10,'86281dcc1d38456e39583ect','86281dcc1d38456e39583ect','uuu',1,1792077046,''),(11,'515e116a40124a50434dd58u','515e116a40124a50434dd582','yy1',1,1792079513,'');
-/*!40000 ALTER TABLE `oryn_user` ENABLE KEYS */;
