@@ -1,30 +1,8 @@
 ﻿# Host: localhost  (Version: 5.7.44)
-# Date: 2026-11-01 00:22:44
+# Date: 2026-11-03 01:48:20
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
-
-#
-# Structure for table "oryn_admin"
-#
-
-DROP TABLE IF EXISTS `oryn_admin`;
-CREATE TABLE `oryn_admin` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '账号，大小写字母数字',
-  `password` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '密码',
-  `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='管理员';
-
-#
-# Data for table "oryn_admin"
-#
-
-/*!40000 ALTER TABLE `oryn_admin` DISABLE KEYS */;
-INSERT INTO `oryn_admin` VALUES (1,'admin','$argon2id$v=19$m=19456,t=2,p=1$yRzfKjab7RTceBaEoSeJyw$FMNCN4mof9qhWOqmhCz9lpJ1iDhylgFlRAXDsj2Yd/s',1793256082);
-/*!40000 ALTER TABLE `oryn_admin` ENABLE KEYS */;
 
 #
 # Structure for table "oryn_art"
@@ -37,9 +15,9 @@ CREATE TABLE `oryn_art` (
   `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '作者',
   `title` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标题',
   `keywords` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '关键字',
-  `description` varchar(200) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '描述',
+  `description` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '描述',
   `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
-  `tags` varchar(250) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '标签',
+  `tags` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '标签',
   `from` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '来源',
   `views` bigint(20) unsigned DEFAULT '1' COMMENT '阅读量',
   `is_top` tinyint(1) unsigned DEFAULT '0' COMMENT '1-置顶',
@@ -66,7 +44,7 @@ CREATE TABLE `oryn_cate` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '名称',
   `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标志',
-  `desc` varchar(200) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '描述',
+  `desc` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '描述',
   `sort` int(5) DEFAULT '100' COMMENT '排序',
   `status` tinyint(1) DEFAULT '1' COMMENT '1-启用，0-禁用',
   `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
@@ -101,3 +79,25 @@ CREATE TABLE `oryn_setting` (
 /*!40000 ALTER TABLE `oryn_setting` DISABLE KEYS */;
 INSERT INTO `oryn_setting` VALUES ('website_beian','','网站备案'),('website_copyright','zig-say','版权'),('website_description','zig-say 是使用 httpz, myzql 及 zmpl 的 zig 简易匿名社区系统','网站描述'),('website_keywords','zig-say,社区,社区论坛,简易论坛','网站关键字'),('website_name','zig-say','网站名称'),('website_stat','','统计代码'),('website_status','1','网站关闭状态'),('website_url','http://www.domain.com','网站链接');
 /*!40000 ALTER TABLE `oryn_setting` ENABLE KEYS */;
+
+#
+# Structure for table "oryn_user"
+#
+
+DROP TABLE IF EXISTS `oryn_user`;
+CREATE TABLE `oryn_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '账号，大小写字母数字',
+  `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='管理员';
+
+#
+# Data for table "oryn_user"
+#
+
+/*!40000 ALTER TABLE `oryn_user` DISABLE KEYS */;
+INSERT INTO `oryn_user` VALUES (1,'admin','$argon2id$v=19$m=19456,t=2,p=1$AVdiJJGXZcAcPyT4q+KoUg$UEsYc0L55FHAfUpKtsdVe4VVhICdMj2pwjeww/ksky8',1793256082);
+/*!40000 ALTER TABLE `oryn_user` ENABLE KEYS */;
