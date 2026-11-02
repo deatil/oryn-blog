@@ -12,7 +12,7 @@ import "oryn:app/model"
 import "oryn:app/utils"
 
 auth_login :: proc(b: ^gh.Bifrost) {
-	ok := auth.admin_require_login(b)
+	ok := auth.user_require_login(b)
 	if ok {
 		view.redirect(b, "/admin/index")
 		return;
@@ -30,7 +30,7 @@ auth_login_save :: proc(b: ^gh.Bifrost) {
 	username := fields["username"]
 	password := fields["password"]
 
-	info := model.get_admin(username)
+	info := model.get_user(username)
 	if len(info) == 0 {
 		view.return_error(b, "登陆失败")
 		return
@@ -41,12 +41,12 @@ auth_login_save :: proc(b: ^gh.Bifrost) {
 		return
 	}
 
-	auth.admin_login(b, username)
+	auth.user_login(b, username)
 
 	view.return_success(b, "登陆成功")
 }
 
 auth_logout :: proc(b: ^gh.Bifrost) {
-	auth.admin_logout(b)
+	auth.user_logout(b)
 	view.redirect(b, "/admin/auth/login")
 }

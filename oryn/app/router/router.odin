@@ -20,4 +20,10 @@ admin_route :: proc(app: ^gh.App) {
 	gh.get(app, "/admin/auth/login", admin.auth_login)
 	gh.post(app, "/admin/auth/login", admin.auth_login_save)
 	gh.get(app, "/admin/auth/logout", admin.auth_logout)
+
+	// auth
+	gh.get(app, "/admin/profile", admin.profile_index)
+	gh.post(app, "/admin/profile/info", admin.profile_info_save)
+	gh.post(app, "/admin/profile/password", admin.profile_password_save)
+
 }

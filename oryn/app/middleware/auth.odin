@@ -7,7 +7,7 @@ import gh "oryn:gjallarhorn"
 import "oryn:app/auth"
 import "oryn:app/view"
 
-admin_auth :: proc(b: ^gh.Bifrost, next: gh.Next) {
+user_auth :: proc(b: ^gh.Bifrost, next: gh.Next) {
 	path := b.path
 	if strings.starts_with(path, "/admin") {
 		if strings.starts_with(path, "/admin/auth") {
@@ -15,7 +15,7 @@ admin_auth :: proc(b: ^gh.Bifrost, next: gh.Next) {
 			return
 		}
 
-		ok := auth.admin_require_login(b)
+		ok := auth.user_require_login(b)
 		if !ok {
 			if b.method == .Post {
 				view.return_error(b, "请先登陆")

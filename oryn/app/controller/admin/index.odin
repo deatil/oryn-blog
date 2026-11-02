@@ -11,7 +11,7 @@ import "oryn:app/model"
 import "oryn:app/config"
 
 index_index :: proc(b: ^gh.Bifrost) {
-	username, _ := auth.admin_current_user(b)
+	username, _ := auth.user_current_user(b)
 
 	data := jinja.dict()
 	jinja.set(data, "username", username)

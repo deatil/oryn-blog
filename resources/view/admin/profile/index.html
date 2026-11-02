@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>账号信息 - 后台管理系统</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/static/admin/css/font.css">
+  <link rel="stylesheet" href="/static/admin/css/weadmin.css">
+</head>
+
+<body>
+  <div class="weadmin-body">
+    <div class="layui-card">
+      <div class="layui-card-header">
+        我的信息
+      </div>
+      <div class="layui-card-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+              <span class="we-red">*</span>登陆账号
+            </label>
+            <div class="layui-input-inline">
+              <input type="text" id="username" name="username" required="" lay-verify="required" autocomplete="off"
+                value="{{ username }}" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+              登陆账号是你的您唯一的登入名
+            </div>
+          </div>
+
+          <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+            </label>
+            <button class="layui-btn" lay-filter="update-info" lay-submit="">
+              确认修改
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="layui-card">
+      <div class="layui-card-header">
+        更改密码
+      </div>
+      <div class="layui-card-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+            <label for="old_password" class="layui-form-label">
+              <span class="we-red">*</span>旧密码
+            </label>
+            <div class="layui-input-inline">
+              <input type="password" id="old_password" name="old_password" required="" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label for="new_password" class="layui-form-label">
+              <span class="we-red">*</span>新密码
+            </label>
+            <div class="layui-input-inline">
+              <input type="password" id="new_password" name="new_password" required="" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+              6到16个字符
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label for="new_password2" class="layui-form-label">
+              <span class="we-red">*</span>确认新密码
+            </label>
+            <div class="layui-input-inline">
+              <input type="password" id="new_password2" name="new_password2" required="" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label for="new_password" class="layui-form-label">
+            </label>
+            <button class="layui-btn" lay-filter="update-pass" lay-submit="">
+              确认修改
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script src="/static/admin/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript">
+layui.config({
+    base: '/static/admin/js/',
+    version: '101100'
+}).extend({
+    admin: 'admin',
+});
+layui.use(['form', 'layer', 'admin'], function () {
+  var form = layui.form,
+    admin = layui.admin,
+    $ = layui.jquery,
+    layer = layui.layer;
+
+  form.on('submit(update-info)', function (data) {
+    $.ajax({
+      url: '/admin/profile/info',
+      type: 'POST',
+      data: data.field,
+      success: function(res) {
+        if(res.code === 0){
+          layer.msg(res.message, function () {});
+        }else {
+          layer.alert(res.message, { icon: 6 });
+        }
+      }
+    });
+
+    return false;
+  });
+
+  form.on('submit(update-pass)', function (data) {
+    $.ajax({
+      url: '/admin/profile/password',
+      type: 'POST',
+      data: data.field,
+      success: function(res) {
+        if(res.code === 0){
+          layer.msg(res.message, function () {});
+        }else {
+          layer.alert(res.message, { icon: 6 });
+        }
+      }
+    });
+
+    return false;
+  });
+
+});
+</script>
+</body>
+
+</html>

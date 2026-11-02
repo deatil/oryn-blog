@@ -26,7 +26,7 @@
   <!-- 顶部开始 -->
   <div class="container">
     <div class="logo">
-      <a href="./index.html">Oryn</a>
+      <a href="/admin/index">Oryn</a>
     </div>
     <div class="left_open">
       <!-- <i title="展开左侧栏" class="iconfont">&#xe699;</i> -->
@@ -95,6 +95,7 @@
     <div class="copyright">Copyright ©2026 Oryn-Blog v1.0 All Rights Reserved</div>
   </div>
   <!-- 底部结束 -->
+  
   <script type="text/javascript">
     var showFooter = true; // 控制是否显示底部示例参数，相关逻辑可删除
     layui.config({
@@ -118,7 +119,7 @@
 
         if (showFooter) {
           var currentY = new Date().getFullYear();
-          $('.copyright').html('Copyright ©2018-' + currentY + ' WeAdmin v1.6 All Rights Reserved');
+          $('.copyright').html('Copyright ©' + currentY + ' Oryn-blog All Rights Reserved');
           $('#footer').show();
         } else {
           $('.left-nav, .page-content').css({ 'bottom': 0 });
@@ -129,6 +130,7 @@
 
   </script>
 </body>
+
 <!--Tab菜单右键弹出菜单-->
 <ul class="rightMenu" id="rightMenu">
   <li data-type="fresh">刷新</li>
