@@ -1,7 +1,6 @@
 package model
 
 import "core:fmt"
-import "core:strings"
 
 import "oryn:app/db"
 import "oryn:app/global"
@@ -20,24 +19,11 @@ get_user :: proc(username: string) -> map[string]string {
 }
 
 update_user :: proc(id: string, data: map[string]string) -> bool {
-	sb := strings.builder_make()
-	i: int = 0
-	for k, v in data {
-		if i > 0 {
-			strings.write_string(&sb, ", ")
-		}
-
-		strings.write_string(&sb, k)
-		strings.write_string(&sb, " = '")
-		strings.write_string(&sb, v)
-		strings.write_string(&sb, "'")
-
-		i += 1
-	}
+	set_str := datas_to_string(data)
 
 	query := fmt.tprintf(
 		"UPDATE %s SET %s WHERE id = '%s'", 
-		table_name("user"), strings.to_string(sb), id
+		table_name("user"), set_str, id
 	)
 	_, err := db.query(global.conn, query)
 	if err != "" {

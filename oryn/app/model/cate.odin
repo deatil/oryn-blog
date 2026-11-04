@@ -1,7 +1,6 @@
 package model
 
 import "core:fmt"
-import "core:strings"
 
 import "oryn:app/db"
 import "oryn:app/global"
@@ -59,24 +58,11 @@ get_cate_count :: proc() -> string {
 }
 
 update_cate :: proc(id: string, data: map[string]string) -> bool {
-	sb := strings.builder_make()
-	i: int = 0
-	for k, v in data {
-		if i > 0 {
-			strings.write_string(&sb, ", ")
-		}
-
-		strings.write_string(&sb, k)
-		strings.write_string(&sb, " = '")
-		strings.write_string(&sb, v)
-		strings.write_string(&sb, "'")
-
-		i += 1
-	}
+	set_str := datas_to_string(data)
 
 	query := fmt.tprintf(
 		`UPDATE %s SET %s WHERE id = '%s'`, 
-		table_name("cate"), strings.to_string(sb), id
+		table_name("cate"), set_str, id
 	)
 	_, err := db.query(global.conn, query)
 	if err != "" {
@@ -88,37 +74,25 @@ update_cate :: proc(id: string, data: map[string]string) -> bool {
 
 delete_cate :: proc(id: string) -> bool {
 	query := fmt.tprintf("DELETE FROM %s WHERE id = '%s'", table_name("cate"), id)
-	_, err := db.query(global.conn, query)
-	if err != "" {
-		return false
+	afr, _ := db.query(global.conn, query)
+	if afr > 0 {
+		return true
 	}
 
-	return true
+	return false
 }
 
 add_cate :: proc(data: map[string]string) -> bool {
-	sb := strings.builder_make()
-	i: int = 0
-	for k, v in data {
-		if i > 0 {
-			strings.write_string(&sb, ", ")
-		}
-
-		strings.write_string(&sb, k)
-		strings.write_string(&sb, " = ")
-		strings.write_string(&sb, v)
-
-		i += 1
-	}
+	set_str := datas_to_string(data)
 
 	query := fmt.tprintf(
 		`INSERT INTO %s SET %s`, 
-		table_name("cate"), strings.to_string(sb)
+		table_name("cate"), set_str
 	)
-	_, err := db.query(global.conn, query)
-	if err != "" {
-		return false
+	afr, _ := db.query(global.conn, query)
+	if afr > 0 {
+		return true
 	}
 
-	return true
+	return false
 }

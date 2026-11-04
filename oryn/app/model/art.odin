@@ -1,7 +1,6 @@
 package model
 
 import "core:fmt"
-import "core:strings"
 
 import "oryn:app/db"
 import "oryn:app/global"
@@ -64,23 +63,11 @@ get_art_count :: proc() -> string {
 }
 
 update_art :: proc(id: string, data: map[string]string) -> bool {
-	sb := strings.builder_make()
-	i: int = 0
-	for k, v in data {
-		if i > 0 {
-			strings.write_string(&sb, ", ")
-		}
-
-		strings.write_string(&sb, k)
-		strings.write_string(&sb, " = '")
-		strings.write_string(&sb, v)
-		strings.write_string(&sb, "'")
-		i += 1
-	}
+	set_str := datas_to_string(data)
 
 	query := fmt.tprintf(
 		`UPDATE %s SET %s WHERE id = '%s'`, 
-		table_name("art"), strings.to_string(sb), id
+		table_name("art"), set_str, id
 	)
 	_, err := db.query(global.conn, query)
 	if err != "" {
@@ -101,23 +88,11 @@ delete_art :: proc(id: string) -> bool {
 }
 
 add_art :: proc(data: map[string]string) -> bool {
-	sb := strings.builder_make()
-	i: int = 0
-	for k, v in data {
-		if i > 0 {
-			strings.write_string(&sb, ", ")
-		}
-
-		strings.write_string(&sb, k)
-		strings.write_string(&sb, " = ")
-		strings.write_string(&sb, v)
-
-		i += 1
-	}
+	set_str := datas_to_string(data)
 
 	query := fmt.tprintf(
 		`INSERT INTO %s SET %s`, 
-		table_name("art"), strings.to_string(sb)
+		table_name("art"), set_str
 	)
 	_, err := db.query(global.conn, query)
 	if err != "" {

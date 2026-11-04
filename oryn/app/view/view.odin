@@ -9,6 +9,7 @@ import gh "oryn:gjallarhorn"
 
 import "oryn:app/global"
 import "oryn:app/utils"
+import "oryn:app/config"
 
 return_html :: proc(b: ^gh.Bifrost, body: string) {
 	gh.write_response(b, 200, "text/html", body)
@@ -62,6 +63,13 @@ render :: proc(template: string, ctx: jinja.Value) -> (s: string, errstr: string
 	}
 
 	return out, ""
+}
+
+set_global_value :: proc() {
+	data := jinja.dict()
+	jinja.set(data, "webname", config.App_Name)
+
+	jinja.add_global(global.view, "settings", data) 
 }
 
 add_functions :: proc() {

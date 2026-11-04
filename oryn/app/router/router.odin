@@ -26,4 +26,10 @@ admin_route :: proc(app: ^gh.App) {
 	gh.post(app, "/admin/profile/info", admin.profile_info_save)
 	gh.post(app, "/admin/profile/password", admin.profile_password_save)
 
+	// cate
+	gh.get(app, "/admin/cate", admin.cate_index)
+	gh.get(app, "/admin/cate/data", admin.cate_data)
+	gh.get(app, "/admin/cate/create", admin.cate_create)
+	gh.post(app, "/admin/cate/create", admin.cate_create_save)
+
 }

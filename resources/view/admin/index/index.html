@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>后台管理 - 后台管理系统</title>
+  <title>{{ settings.webname }}文章管理系统</title>
   <meta name="renderer" content="webkit|ie-comp|ie-stand">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport"
@@ -26,7 +26,7 @@
   <!-- 顶部开始 -->
   <div class="container">
     <div class="logo">
-      <a href="/admin/index">Oryn</a>
+      <a href="/admin/index">{{ settings.webname }}</a>
     </div>
     <div class="left_open">
       <!-- <i title="展开左侧栏" class="iconfont">&#xe699;</i> -->
@@ -119,7 +119,7 @@
 
         if (showFooter) {
           var currentY = new Date().getFullYear();
-          $('.copyright').html('Copyright ©' + currentY + ' Oryn-blog All Rights Reserved');
+          $('.copyright').html('Copyright ©' + currentY + ' {{ settings.webname }} All Rights Reserved');
           $('#footer').show();
         } else {
           $('.left-nav, .page-content').css({ 'bottom': 0 });

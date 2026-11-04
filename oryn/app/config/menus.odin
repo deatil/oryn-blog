@@ -13,12 +13,12 @@ Amin_Menus := `{
 				"id": 11,
 				"name": "文章列表",
 				"icon": "",
-				"url": "/admin/article/index"
+				"url": "/admin/art"
 			}, {
 				"id": 12,
 				"name": "分类管理",
 				"icon": "",
-				"url": "/admin/article/category"
+				"url": "/admin/cate"
 			}]
 		},
 		{
