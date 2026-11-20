@@ -21,7 +21,7 @@ admin_route :: proc(app: ^gh.App) {
 	gh.post(app, "/admin/auth/login", admin.auth_login_save)
 	gh.get(app, "/admin/auth/logout", admin.auth_logout)
 
-	// auth
+	// profile
 	gh.get(app, "/admin/profile", admin.profile_index)
 	gh.post(app, "/admin/profile/info", admin.profile_info_save)
 	gh.post(app, "/admin/profile/password", admin.profile_password_save)
@@ -31,5 +31,20 @@ admin_route :: proc(app: ^gh.App) {
 	gh.get(app, "/admin/cate/data", admin.cate_data)
 	gh.get(app, "/admin/cate/create", admin.cate_create)
 	gh.post(app, "/admin/cate/create", admin.cate_create_save)
+	gh.get(app, "/admin/cate/edit", admin.cate_edit)
+	gh.post(app, "/admin/cate/edit", admin.cate_edit_save)
+	gh.post(app, "/admin/cate/del", admin.cate_del)
 
+	// art
+	gh.get(app, "/admin/art", admin.art_index)
+	gh.get(app, "/admin/art/data", admin.art_data)
+	gh.get(app, "/admin/art/create", admin.art_create)
+	gh.post(app, "/admin/art/create", admin.art_create_save)
+	gh.get(app, "/admin/art/edit", admin.art_edit)
+	gh.post(app, "/admin/art/edit", admin.art_edit_save)
+	gh.post(app, "/admin/art/del", admin.art_del)
+
+	// setting
+	gh.get(app, "/admin/setting", admin.setting_index)
+	gh.post(app, "/admin/setting", admin.setting_save)
 }

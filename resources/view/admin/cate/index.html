@@ -23,134 +23,132 @@
   </div>
   <div class="weadmin-body">
     <div class="weadmin-block">
-      <button class="layui-btn" id="expand">全部展开</button>
-      <button class="layui-btn" id="collapse">全部收起</button>
       <button class="layui-btn" onclick="WeAdminShow('添加分类','/admin/cate/create')"><i
           class="layui-icon layui-icon-add-circle-fine"></i>添加</button>
       <span class="fr" style="line-height:40px">共有数据：{{ count }} 条</span>
     </div>
 
-    <div id="cate"></div>
+    <table class="layui-hide" id="cateList" lay-filter="cateList"></table>
   </div>
+
+  <script type="text/html" id="operateTpl">
+    <a title="编辑" lay-event="edit" href="javascript:;">
+      <i class="layui-icon layui-icon-edit"></i>
+    </a>
+    <a title="删除" lay-event="remove" href="javascript:;">
+      <i class="layui-icon layui-icon-delete"></i>
+    </a>
+  </script>
 
 <script src="/static/admin/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript">
-var layout = [{
-  name: '菜单名称',
-  treeNodes: true,
-  headerClass: 'value_col',
-  colClass: 'value_col',
-  style: 'width: 60%'
-},
-{
-  name: '状态',
-  headerClass: 'td-status',
-  colClass: 'td-status',
-  style: 'width: 10%',
-  render: function () {
-    return '<span class="layui-btn layui-btn-normal layui-btn-xs">已启用</span>';
-  }
-},
-{
-  name: '操作',
-  headerClass: 'td-manage',
-  colClass: 'td-manage',
-  style: 'width: 20%',
-  render: function (row) {
-    return '<a onclick="node_stop(this,\'10001\')" href="javascript:;" title="启用"><i class="layui-icon">&#xe601;</i></a>' +
-      '<a title="编辑" onclick="WeAdminShow(\'编辑\',\'./category-edit.html\')" href="javascript:;"><i class="layui-icon">&#xe642;</i></a>' +
-      '<a title="删除" onclick="node_del(' + row.id + ')" href="javascript:;">\<i class="layui-icon">&#xe640;</i></a>';
-  }
-},
-];
-
 layui.config({
   base: '/static/admin/js/',
   version: '101100'
 }).extend({
-  admin: 'admin',
-  treeGrid: 'extends/treeGrid'
+  admin: 'admin'
 });
 
-layui.use(['treeGrid','admin', 'jquery', 'layer'], function () {
+layui.use(['table', 'admin', 'jquery', 'layer'], function () {
   var layer = layui.layer,
     $ = layui.jquery,
-		admin = layui.admin,
-    treeGrid = layui.treeGrid;
+    table = layui.table,
+		admin = layui.admin;
 
-  var nodeTree = null;
-
-  var renderList = function () {
-    $.ajax({
-      url: '/admin/cate/data',
-      type: 'GET',
-      data: {},
-      success: function (res) {
-        if (res.code === 0) {
-          var initialData = res.data.list;
-          var resultDate = initialData.map(function (item) {
-            return Object.assign({}, item, { spread: true });
-          });
-
-          // 渲染树节点
-          nodeTree = treeGrid({
-            elem: '#cate'
-            , spreadable: true //设置是否全展开，默认不展开
-            , nodes: resultDate
-            , layout: layout
-          });
-        } else {
-          layer.msg(res.message, function () { });
-        }
+  table.render({
+    elem: '#cateList',
+    cellMinWidth: 80,
+    page: true,
+    skin: 'line',
+    cols: [
+      [
+      {
+        field: 'id', title: 'ID', sort: true
+      }, 
+      {
+        field: 'name', title: '名称'
+      }, 
+      {
+        field: 'slug', title: '标识'
+      }, 
+      {
+        field: 'sort', title: '排序'
+      },
+      {
+        field: 'add_time', title: '发布时间', sort: true, width: 180, templet: function(d) {
+          if (d.add_time > 0) { 
+            return layui.util.toDateString(d.add_time * 1000, 'yyyy-MM-dd HH:mm:ss');
+          } else { 
+            return "--";
+          } 
+        },
+      }, 
+      {
+        field: 'sort', title: '排序', sort: true
+      }, 
+      {
+        field: 'operate', title: '操作', toolbar: '#operateTpl', unresize: true
       }
-    })
-  }
+      ]
+    ],
+    url: "/admin/cate/data",
+    parseData: function(res) {
+      return {
+        "code": res.code,
+        "count": res.data.count,
+        "data": res.data.list,
+      };
+    },
+    event: true,
+    page: true
+  });
 
-  window.node_del = function (nodeId) {
-    alert(nodeId);
-  }
-  /*分类-停用*/
-  window.node_stop = function (obj, id) {
-    var confirmTip;
-    if ($(obj).attr('title') == '启用') {
-      confirmTip = '确认要停用吗？';
-    } else {
-      confirmTip = '确认要启用吗？';
+  table.on('tool(cateList)', function(obj) {
+    if (obj.event === 'remove') {
+      window.remove(obj);
+    } else if (obj.event === 'edit') {
+      window.edit(obj);
     }
-    layer.confirm(confirmTip, function (index) {
-      if ($(obj).attr('title') == '启用') {
-        //发异步把用户状态进行更改
-        $(obj).attr('title', '停用')
-        $(obj).find('i').html('&#xe62f;');
-        $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-        layer.msg('已停用!', {
-          icon: 5,
-          time: 1000
-        });
-      } else {
-        $(obj).attr('title', '启用')
-        $(obj).find('i').html('&#xe601;');
+  });
+  
+  window.remove = function(obj) {
+    layer.confirm('确定要删除该分类', {
+      icon: 3,
+      title: '提示'
+    }, function(index) {
+      layer.close(index);
+      let loading = layer.load();
 
-        $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-        layer.msg('已启用!', {
-          icon: 6,
-          time: 1000
-        });
-      }
+      $.ajax({
+        url: "/admin/cate/del?id=" + obj.data['id'],
+        data: {},
+        type: 'post',
+        dataType: 'json',
+        success: function(result) {
+          layer.close(loading);
+
+          if (result.code == 0) {
+            layer.msg(result.message, {
+              icon: 1,
+              time: 1000
+            }, function() {
+              obj.del();
+            });
+          } else {
+            layer.msg(result.message, {
+              icon: 2,
+              time: 1000
+            });
+          }
+        }
+      })
     });
   }
 
-  $(function () {
-    renderList();
-  });
+  window.edit = function(obj) {
+    WeAdminEdit('编辑', "/admin/cate/edit?id=" + obj.data['id'], 2, 600, 400);
+  }
 
-  $('#collapse').on('click', function () {
-    layui.collapse(nodeTree);
-  });
-
-  $('#expand').on('click', function () {
-    layui.expand(nodeTree);
-  });
 });
 </script>
 </body>

@@ -30,9 +30,9 @@ get_setting_by_name :: proc(name: string) -> map[string]string {
 	return item
 }
 
-update_setting :: proc(id: string, name: string, value: string) -> bool {
+update_setting :: proc(name: string, value: string) -> bool {
 	query := fmt.tprintf(
-		`UPDATE %s SET value = '%s' WHERE name = '%s'`, 
+		"UPDATE %s SET `value` = '%s' WHERE name = '%s'", 
 		table_name("setting"), value, name
 	)
 	_, err := db.query(global.conn, query)

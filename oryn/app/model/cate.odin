@@ -21,22 +21,33 @@ get_cates :: proc(cfg: Cate_Where) -> []map[string]string {
 	if limit <= 0 {
 		limit = 10
 	}
-	status := cfg.status
-	if status != 0 && status != 1 {
-		status = 1
+	status := "1 = 1"
+	if cfg.status != -1 {
+		status = fmt.tprintf("status = %d", cfg.status)
 	}
 	orderby := cfg.orderby
 	if orderby == "" {
-		orderby = "add_time"
+		orderby = "add_time DESC"
 	}
 
 	query := fmt.tprintf(
 		`SELECT * FROM %s 
-		WHERE status = '%s'
-		ORDER BY %s 
+		WHERE %s ORDER BY %s 
 		LIMIT %d, %d`, 
 		table_name("cate"), status,
 		orderby, offset, limit
+	)
+	items, _ := db.get_rows(global.conn, query)
+
+	return items
+}
+
+get_cate_all :: proc() -> []map[string]string {
+	query := fmt.tprintf(
+		`SELECT * FROM %s 
+		WHERE status = 1 
+		ORDER BY add_time DESC`, 
+		table_name("cate")
 	)
 	items, _ := db.get_rows(global.conn, query)
 
@@ -64,6 +75,7 @@ update_cate :: proc(id: string, data: map[string]string) -> bool {
 		`UPDATE %s SET %s WHERE id = '%s'`, 
 		table_name("cate"), set_str, id
 	)
+	// fmt.println(query)
 	_, err := db.query(global.conn, query)
 	if err != "" {
 		return false

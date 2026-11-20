@@ -14,12 +14,6 @@
   <link rel="stylesheet" href="/static/admin/css/weadmin.css">
 
   <script type="text/javascript" src="/static/admin/layui/layui.js" charset="utf-8"></script>
-  <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
-  <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
-
 </head>
 
 <body>
@@ -39,10 +33,10 @@
         <dl class="layui-nav-child">
           <!-- 二级菜单 -->
           <dd>
-            <a onclick="WeAdminShow('文章','/admin/article/index')"><i class="layui-icon layui-icon-list"></i>文章</a>
+            <a onclick="WeAdminShow('新增文章','/admin/art/create')"><i class="layui-icon layui-icon-list"></i>文章</a>
           </dd>
           <dd>
-            <a onclick="WeAdminShow('账号','/admin/user')"><i class="layui-icon layui-icon-user"></i>账号</a>
+            <a onclick="WeAdminShow('新增分类','/admin/cate/create')"><i class="layui-icon layui-icon-user"></i>分类</a>
           </dd>
         </dl>
       </li>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>编辑分类 - 后台管理系统</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/static/admin/css/font.css">
+  <link rel="stylesheet" href="/static/admin/css/weadmin.css">
+</head>
+
+<body>
+  <div class="weadmin-body">
+
+    <form id="form1" class="layui-form">
+      <div class="layui-form-item">
+        <label class="layui-form-label">分类名称</label>
+        <div class="layui-input-block">
+          <input type="text" name="name" value="{{ data.name }}" lay-verify="required" jq-error="请输入分类名称" placeholder="请输入分类名称"
+            autocomplete="off" class="layui-input ">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">分类标识</label>
+        <div class="layui-input-block">
+          <input type="text" name="slug" value="{{ data.slug }}" lay-verify="required" jq-error="请输入分类标识" 
+            placeholder="请输入分类标识" autocomplete="off" class="layui-input ">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">分类描述</label>
+        <div class="layui-input-block">
+            <textarea name="content" placeholder="" class="layui-textarea">{{ data.desc }}</textarea>
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-inline">
+          <input type="text" name="sort" lay-verify="number" value="{{ data.sort|default(100) }}" jq-error="排序必须为数字" placeholder="分类排序"
+            autocomplete="off" class="layui-input ">
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+          {% if data.status == '1' %}
+            <input type="radio" name="status" title="启用" value="1" checked />
+            <input type="radio" name="status" title="禁用" value="0" />
+          {% else %}
+            <input type="radio" name="status" title="启用" value="1" />
+            <input type="radio" name="status" title="禁用" value="0" checked />
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit="" lay-filter="edit">立即提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+<script src="/static/admin/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript">
+layui.config({
+  base: '/static/admin/js/',
+  version: '101100'
+}).extend({
+  admin: 'admin'
+});
+
+layui.use(['form', 'admin', 'jquery', 'layer'], function () {
+  var layer = layui.layer,
+    $ = layui.jquery,
+    form = layui.form,
+		admin = layui.admin;
+
+  form.on('submit(edit)', function(data) {
+    $.ajax({
+        url: "/admin/cate/edit?id={{ data.id }}",
+        data: data.field,
+        dataType: 'json',
+        type: 'post',
+        success: function(result) {
+            if (result.code == 0) {
+                layer.msg(result.message, {icon:1,time:1000}, function() {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭当前页
+                    parent.layui.table.reload("topic-table");
+                });
+            } else {
+                layer.msg(result.message, {icon:2,time:1000});
+            }
+        }
+    });
+
+    return false;
+  });
+
+});
+</script>
+</body>
+
+</html>

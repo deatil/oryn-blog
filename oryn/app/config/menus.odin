@@ -35,15 +35,15 @@ Amin_Menus := `{
 		},
 		{
 			"id": 3,
-			"name": "账号管理",
+			"name": "系统设置",
 			"icon": "&#xe726;",
 			"url": "",
 			"children": [
 				{
 					"id": 31,
-					"name": "账号列表",
+					"name": "系统设置",
 					"icon": "",
-					"url": "/pages/user"
+					"url": "/admin/setting"
 				}
 			]
 		}

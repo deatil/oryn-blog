@@ -18,8 +18,9 @@ datas_to_string :: proc(data: map[string]string) -> string {
 			strings.write_string(&sb, ", ")
 		}
 
+		strings.write_string(&sb, "`")
 		strings.write_string(&sb, k)
-		strings.write_string(&sb, " = '")
+		strings.write_string(&sb, "` = '")
 		strings.write_string(&sb, v)
 		strings.write_string(&sb, "'")
 
