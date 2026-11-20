@@ -73,7 +73,8 @@ art_create :: proc(b: ^gh.Bifrost) {
 	cates := jinja.list()
 	for item in cate_list {
 		d := jinja.dict()
-		jinja.set(d, item["id"], item["name"])
+		jinja.set(d, "id", jinja.str(item["id"]))
+		jinja.set(d, "name", jinja.str(item["name"]))
 
 		jinja.append_value(cates, d)
 	}
@@ -124,6 +125,7 @@ art_edit :: proc(b: ^gh.Bifrost) {
 
 	ctx := jinja.dict()
 	jinja.set(ctx, "id", jinja.str(item["id"]))
+	jinja.set(ctx, "cate_id", jinja.str(item["cate_id"]))
 	jinja.set(ctx, "title", jinja.str(item["title"]))
 	jinja.set(ctx, "keywords", jinja.str(item["keywords"]))
 	jinja.set(ctx, "description", jinja.str(item["description"]))
@@ -139,7 +141,8 @@ art_edit :: proc(b: ^gh.Bifrost) {
 	cates := jinja.list()
 	for item in cate_list {
 		d := jinja.dict()
-		jinja.set(d, item["id"], item["name"])
+		jinja.set(d, "id", jinja.str(item["id"]))
+		jinja.set(d, "name", jinja.str(item["name"]))
 
 		jinja.append_value(cates, d)
 	}

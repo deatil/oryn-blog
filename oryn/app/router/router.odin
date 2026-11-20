@@ -44,6 +44,12 @@ admin_route :: proc(app: ^gh.App) {
 	gh.post(app, "/admin/art/edit", admin.art_edit_save)
 	gh.post(app, "/admin/art/del", admin.art_del)
 
+	// comment
+	gh.get(app, "/admin/comment", admin.comment_index)
+	gh.get(app, "/admin/comment/data", admin.comment_data)
+	gh.get(app, "/admin/comment/view", admin.comment_view)
+	gh.post(app, "/admin/comment/del", admin.comment_del)
+
 	// setting
 	gh.get(app, "/admin/setting", admin.setting_index)
 	gh.post(app, "/admin/setting", admin.setting_save)

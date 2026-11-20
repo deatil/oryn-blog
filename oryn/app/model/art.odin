@@ -28,21 +28,26 @@ get_arts :: proc(cfg: Art_Where) -> []map[string]string {
 	}
 	orderby := cfg.orderby
 	if orderby == "" {
-		orderby = "a.add_time"
+		orderby = "a.add_time DESC"
+	}
+	keywords := ""
+	if cfg.keywords != "" {
+		keywords = fmt.tprintf("AND a.title LIKE '%%s%'", cfg.keywords)
 	}
 
 	query := fmt.tprintf(
-		`SELECT t.*, u.username, c.name as cate_name
+		`SELECT a.*, u.username, c.name as cate_name
 		FROM %s a
 		LEFT JOIN %s c ON c.id = a.cate_id
 		LEFT JOIN %s u ON u.id = a.user_id
-		WHERE a.title LIKE '%%s%' %s
+		WHERE 1=1 %s %s
 		ORDER BY %s 
 		LIMIT %d, %d`, 
-		table_name("art"), table_name("cate"), table_name("admin"),
-		cfg.keywords, status,
+		table_name("art"), table_name("cate"), table_name("user"),
+		keywords, status,
 		orderby, offset, limit
 	)
+	// fmt.println(query)
 	items, _ := db.get_rows(global.conn, query)
 
 	return items

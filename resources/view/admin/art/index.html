@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>文章管理 - 后台管理系统</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/static/admin/css/font.css">
+  <link rel="stylesheet" href="/static/admin/css/weadmin.css">
+</head>
+
+<body>
+  <div class="weadmin-nav">
+    <span class="layui-breadcrumb">
+      <a href="">首页</a>
+      <a><cite>文章管理</cite></a>
+    </span>
+    <a class="layui-btn layui-btn-sm" style="margin-top:3px;float:right"
+      href="javascript:location.replace(location.href);" title="刷新">
+      <i class="layui-icon layui-icon-refresh"></i></a>
+  </div>
+  <div class="weadmin-body">
+    <div class="weadmin-block">
+      <button class="layui-btn" onclick="WeAdminShow('添加文章','/admin/art/create')"><i
+          class="layui-icon layui-icon-add-circle-fine"></i>添加</button>
+      <span class="fr" style="line-height:40px">共有数据：{{ count }} 条</span>
+    </div>
+
+    <table class="layui-hide" id="artList" lay-filter="artList"></table>
+  </div>
+
+  <script type="text/html" id="operateTpl">
+    <a title="编辑" lay-event="edit" href="javascript:;">
+      <i class="layui-icon layui-icon-edit"></i>
+    </a>
+    <a title="删除" lay-event="remove" href="javascript:;">
+      <i class="layui-icon layui-icon-delete"></i>
+    </a>
+  </script>
+
+<script src="/static/admin/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript">
+layui.config({
+  base: '/static/admin/js/',
+  version: '101100'
+}).extend({
+  admin: 'admin'
+});
+
+layui.use(['table', 'admin', 'jquery', 'layer'], function () {
+  var layer = layui.layer,
+    $ = layui.jquery,
+    table = layui.table,
+		admin = layui.admin;
+
+  table.render({
+    elem: '#artList',
+    cellMinWidth: 80,
+    page: true,
+    skin: 'line',
+    cols: [
+      [
+      {
+        field: 'id', title: 'ID', sort: true
+      }, 
+      {
+        field: 'title', title: '名称'
+      }, 
+      {
+        field: 'cate_name', title: '分类'
+      }, 
+      {
+        field: 'views', title: '浏览量'
+      },
+      {
+        field: 'status', title: '状态', templet: function(d) {
+          if (d.status == "1") { 
+            return "<span class=\"layui-badge layui-bg-green\">启用</span>";
+          } else { 
+            return "<span class=\"layui-badge\">禁用</span>";
+          } 
+        },
+      },
+      {
+        field: 'add_time', title: '发布时间', sort: true, width: 180, templet: function(d) {
+          if (d.add_time > 0) { 
+            return layui.util.toDateString(d.add_time * 1000, 'yyyy-MM-dd HH:mm:ss');
+          } else { 
+            return "--";
+          } 
+        },
+      }, 
+      {
+        field: 'operate', title: '操作', toolbar: '#operateTpl', unresize: true
+      }
+      ]
+    ],
+    url: "/admin/art/data",
+    parseData: function(res) {
+      return {
+        "code": res.code,
+        "count": res.data.count,
+        "data": res.data.list,
+      };
+    },
+    event: true,
+    page: true
+  });
+
+  table.on('tool(artList)', function(obj) {
+    if (obj.event === 'remove') {
+      window.remove(obj);
+    } else if (obj.event === 'edit') {
+      window.edit(obj);
+    }
+  });
+  
+  window.remove = function(obj) {
+    layer.confirm('确定要删除该文章', {
+      icon: 3,
+      title: '提示'
+    }, function(index) {
+      layer.close(index);
+      let loading = layer.load();
+
+      $.ajax({
+        url: "/admin/art/del?id=" + obj.data['id'],
+        data: {},
+        type: 'post',
+        dataType: 'json',
+        success: function(result) {
+          layer.close(loading);
+
+          if (result.code == 0) {
+            layer.msg(result.message, {
+              icon: 1,
+              time: 1000
+            }, function() {
+              obj.del();
+            });
+          } else {
+            layer.msg(result.message, {
+              icon: 2,
+              time: 1000
+            });
+          }
+        }
+      })
+    });
+  }
+
+  window.edit = function(obj) {
+    WeAdminEdit('编辑', "/admin/art/edit?id=" + obj.data['id'], 2, 600, 400);
+  }
+
+});
+</script>
+</body>
+
+</html>
