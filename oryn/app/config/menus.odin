@@ -24,7 +24,7 @@ Amin_Menus := `{
 		{
 			"id": 2,
 			"name": "评论管理",
-			"icon": "&#xe705;",
+			"icon": "&#xe6b2;",
 			"url": "",
 			"children": [{
 				"id": 21,
@@ -36,7 +36,7 @@ Amin_Menus := `{
 		{
 			"id": 3,
 			"name": "系统设置",
-			"icon": "&#xe726;",
+			"icon": "&#xe715;",
 			"url": "",
 			"children": [
 				{

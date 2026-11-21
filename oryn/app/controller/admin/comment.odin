@@ -71,6 +71,7 @@ comment_view :: proc(b: ^gh.Bifrost) {
 
 	ctx := jinja.dict()
 	jinja.set(ctx, "id", jinja.str(item["id"]))
+	jinja.set(ctx, "art_id", jinja.str(item["art_id"]))
 	jinja.set(ctx, "content", jinja.str(item["content"]))
 	jinja.set(ctx, "username", jinja.str(item["username"]))
 	jinja.set(ctx, "status", jinja.str(item["status"]))
@@ -78,13 +79,14 @@ comment_view :: proc(b: ^gh.Bifrost) {
 	art_info := model.get_art(item["art_id"])
 
 	art := jinja.dict()
+	jinja.set(art, "id", jinja.str(art_info["id"]))
 	jinja.set(art, "title", jinja.str(art_info["title"]))
 
 	data := jinja.dict()
 	jinja.set(data, "data", ctx)
 	jinja.set(data, "art", art)
 
-	output, _ := view.render("admin/comment/edit.html", data)
+	output, _ := view.render("admin/comment/view.html", data)
 
 	view.return_html(b, output)
 }
