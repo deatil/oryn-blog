@@ -10,6 +10,7 @@ Art_Where :: struct {
 	limit:    int,
 	keywords: string,
 	status:   int,
+	wheres:   string,
 	orderby:  string,
 }
 
@@ -24,7 +25,7 @@ get_arts :: proc(cfg: Art_Where) -> []map[string]string {
 	}
 	status := ""
 	if cfg.status == 0 || cfg.status == 1 {
-		status = fmt.tprintf("AND status = '%s'", cfg.status)
+		status = fmt.tprintf("AND a.status = '%d'", cfg.status)
 	}
 	orderby := cfg.orderby
 	if orderby == "" {
@@ -40,11 +41,11 @@ get_arts :: proc(cfg: Art_Where) -> []map[string]string {
 		FROM %s a
 		LEFT JOIN %s c ON c.id = a.cate_id
 		LEFT JOIN %s u ON u.id = a.user_id
-		WHERE 1=1 %s %s
+		WHERE 1=1 %s %s %s
 		ORDER BY %s 
 		LIMIT %d, %d`, 
 		table_name("art"), table_name("cate"), table_name("user"),
-		keywords, status,
+		keywords, status, cfg.wheres,
 		orderby, offset, limit
 	)
 	// fmt.println(query)
@@ -62,6 +63,21 @@ get_art :: proc(id: string) -> map[string]string {
 
 get_art_count :: proc() -> string {
 	query := fmt.tprintf("SELECT count(id) as n FROM %s LIMIT 1", table_name("art"))
+	item, _ := db.get_one(global.conn, query)
+
+	return item["n"]
+}
+
+get_art_count_where :: proc(cfg: Art_Where) -> string {
+	status := ""
+	if cfg.status == 0 || cfg.status == 1 {
+		status = fmt.tprintf("AND status = '%d'", cfg.status)
+	}
+
+	query := fmt.tprintf(
+		"SELECT count(id) as n FROM %s WHERE 1=1 %s %s LIMIT 1", 
+		table_name("art"), status, cfg.wheres
+	)
 	item, _ := db.get_one(global.conn, query)
 
 	return item["n"]

@@ -4,14 +4,24 @@ import gh "oryn:gjallarhorn"
 
 import "oryn:app/config"
 import admin "oryn:app/controller/admin"
+import index "oryn:app/controller/index"
 
 route :: proc(app: ^gh.App) {
+	index_route(app)
 	admin_route(app)
 
 	gh.hail(app, "/static", config.Static_Path)
 }
 
+index_route :: proc(app: ^gh.App) {
+	gh.get(app, "/", index.index)
+	gh.get(app, "/cate/:slug", index.cate)
+	gh.get(app, "/art/:id", index.art)
+	gh.post(app, "/comment", index.comment_create)
+}
+
 admin_route :: proc(app: ^gh.App) {
+	// console
 	gh.get(app, "/admin/index", admin.index_index)
 	gh.get(app, "/admin/console", admin.index_console)
 	gh.get(app, "/admin/menus", admin.index_menus)

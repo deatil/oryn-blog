@@ -54,8 +54,26 @@ get_cate_all :: proc() -> []map[string]string {
 	return items
 }
 
+get_cate_all2 :: proc() -> []map[string]string {
+	query := fmt.tprintf(
+		`SELECT * FROM %s 
+		ORDER BY add_time DESC`, 
+		table_name("cate")
+	)
+	items, _ := db.get_rows(global.conn, query)
+
+	return items
+}
+
 get_cate :: proc(id: string) -> map[string]string {
 	query := fmt.tprintf("SELECT * FROM %s WHERE id = '%s' LIMIT 1", table_name("cate"), id)
+	item, _ := db.get_one(global.conn, query)
+
+	return item
+}
+
+get_cate_by_slug :: proc(slug: string) -> map[string]string {
+	query := fmt.tprintf("SELECT * FROM %s WHERE slug = '%s' LIMIT 1", table_name("cate"), slug)
 	item, _ := db.get_one(global.conn, query)
 
 	return item

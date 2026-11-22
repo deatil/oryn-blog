@@ -86,6 +86,12 @@ cate_create_save :: proc(b: ^gh.Bifrost) {
 		return
 	}
 
+	item := model.get_cate_by_slug(slug)
+	if item != nil {
+		view.return_error(b, "标识已经存在")
+		return
+	}
+
 	data := make(map[string]string)
 	data["name"] = name
 	data["slug"] = slug
@@ -137,6 +143,12 @@ cate_edit_save :: proc(b: ^gh.Bifrost) {
 	slug := fields["slug"]
 	if slug == "" {
 		view.return_error(b, "标识不能为空")
+		return
+	}
+
+	item := model.get_cate_by_slug(slug)
+	if item != nil && item["id"] != id {
+		view.return_error(b, "标识已经存在")
 		return
 	}
 

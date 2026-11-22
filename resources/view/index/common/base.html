@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{% block title %}{{- settings.webname -}}{% endblock %}</title>
+    <link rel="stylesheet icon" href="/static/blog/img/favicon.ico" />
+    
+    {% include 'index/common/head.html' %}
+
+    {% block style %}{% endblock %}
+</head>
+
+<body>
+    {% include 'index/common/top_nav.html' %}
+
+    <div class="container blog">
+        {% block container %}{% endblock %}
+    </div>
+    
+    {% include 'index/common/footer.html' %}
+
+    {% block script %}{% endblock %}
+</body>
+</html>

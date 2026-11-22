@@ -68,7 +68,7 @@ art_data :: proc(b: ^gh.Bifrost) {
 }
 
 art_create :: proc(b: ^gh.Bifrost) {
-	cate_list := model.get_cate_all()
+	cate_list := model.get_cate_all2()
 
 	cates := jinja.list()
 	for item in cate_list {
@@ -136,7 +136,7 @@ art_edit :: proc(b: ^gh.Bifrost) {
 	jinja.set(ctx, "is_top", jinja.str(item["is_top"]))
 	jinja.set(ctx, "status", jinja.str(item["status"]))
 
-	cate_list := model.get_cate_all()
+	cate_list := model.get_cate_all2()
 
 	cates := jinja.list()
 	for item in cate_list {

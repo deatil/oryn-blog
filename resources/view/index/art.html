@@ -1,0 +1,197 @@
+{% extends 'index/common/base' %}
+
+{% block title %}{{ data.blog.title }} - {{ super() }}{% endblock %}
+
+{% block style %}
+<style>
+.blog-page-item {
+    border-bottom: 1px solid #edeeef;
+}
+.blog-content-data {
+    padding: 15px;
+}
+.blog-comment-content {
+    padding: 5px 0 15px 0;;
+}
+</style>
+{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-md-9">
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">
+                    <i class="fa fa-home" aria-hidden="true"></i> 首页
+                </a>
+            </li>
+            <li class="active">话题详情</li>
+        </ol>
+        
+        <div class="blog-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        {{ data.blog.title }}
+                    </h4>
+                    <div class="blog-meta text-muted">
+                        <span class="blog-datetime">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>  
+                            {{ format_time(data.blog.add_time) }}
+                        </span>
+                    
+                        <span class="blog-author ml-3">
+                            <i class="fa fa-user" aria-hidden="true"></i>  
+                            {{ data.blog.username }}
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-body blog-content-data">
+                    {{ data.blog.content }}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    评论列表({{ data.comment_count }})
+                </div>
+                <div class="panel-body">
+                    <div class="blog-page-items">
+                        {% for comment in data.comments %}
+                        <div class="media blog-page-item">
+                            <div class="media-body">
+                                <p class="text-muted">
+                                    <span class="blog-author">
+                                        <i class="fa fa-user" aria-hidden="true"></i>  
+                                        {{ comment.username }}
+                                    </span>
+                                    <span class="blog-datetime ml-3">
+                                        <i class="fa fa-clock-o" aria-hidden="true"></i>  
+                                        {{ format_time(comment.add_time, "YYYY-MM-DD HH:mm") }}
+                                    </span>
+                                </p>
+
+                                <div class="media-content blog-comment-content">
+                                    {{ comment.content }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        {% if data.comment_count == 0 %}
+                            <div class="text-center">
+                                无数据
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if data.comment_pages > 1 %}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="blog-page">
+                            <nav aria-label="Page navigation">
+                                <ul class="pager" style="margin:0;text-align:left;">
+                                    {% if (data.comment_page > 1 and data.comment_pages > 1) %}
+                                        <li><a href="/blog/{{ data.blog.id }}?page={{ data.comment_page1 }}">上一页</a></li>
+                                    {% endif %}
+
+                                    {% if (data.comment_page > 1 and data.comment_pages > 1) == false %}
+                                        <li class="disabled"><a href="#">上一页</a></li>
+                                    {% endif %}
+
+                                    {% if (data.comment_page < data.comment_pages and data.comment_pages > 1) %}
+                                        <li><a href="/blog/{{ data.blog.id }}?page={{ data.comment_page2 }}">下一页</a></li>
+                                    {% endif %}
+
+                                    {% if (data.comment_page < data.comment_pages and data.comment_pages > 1) == false %}
+                                        <li class="disabled"><a href="#">下一页</a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    添加评论
+                </div>
+                <div class="panel-body">
+                    <form action="" method="post" id="data-form" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="blog-comment-add" class="col-sm-2 text-right">评论内容</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" id="blog-comment-add" name="content" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="art_id" value="{{ data.blog.id }}" />
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" class="btn btn-primary px-5 py-2 js-save-btn">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                快捷操作
+            </div>
+            <div class="panel-body text-center">
+                <a href="/blog/create"
+                    class="btn btn-primary"
+                    style="width: 185px; padding: 13px 0; border-radius:3px"
+                >
+                    创建话题
+                </a>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/blog/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/blog/js/layer/layer.js"></script>
+<script type="text/javascript">
+$(function() {
+    $(".top-nav-item.top-nav-home").addClass("active");
+
+    // 保存
+    $(".js-save-btn").click(function(e) {
+        e.stopPropagation;
+        e.preventDefault;
+
+        var data = $("#data-form").serialize();
+
+        var url = '/blog/comment/add';
+        $.post(url, data, function(data) {
+            if (data.code == 0) {
+                layer.msg(data.msg);
+                
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+            } else {
+                layer.msg(data.msg);
+            }
+        }).fail(function (xhr, status, info) {
+            layer.msg("请求失败");
+        });
+    });
+});
+</script>
+{% endblock %}
+

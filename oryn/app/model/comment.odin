@@ -9,6 +9,7 @@ Comment_Where :: struct {
 	offset:  int,
 	limit:   int,
 	status:  int,
+	wheres:  string,
 	orderby: string,
 }
 
@@ -21,9 +22,9 @@ get_comments :: proc(cfg: Comment_Where) -> []map[string]string {
 	if limit <= 0 {
 		limit = 10
 	}
-	status := "1 = 1"
+	status := ""
 	if cfg.status != -1 {
-		status = fmt.tprintf("status = %d", cfg.status)
+		status = fmt.tprintf("AND status = %d", cfg.status)
 	}
 	orderby := cfg.orderby
 	if orderby == "" {
@@ -32,9 +33,10 @@ get_comments :: proc(cfg: Comment_Where) -> []map[string]string {
 
 	query := fmt.tprintf(
 		`SELECT * FROM %s 
-		WHERE %s ORDER BY %s 
+		WHERE 1 = 1 %s %s
+		ORDER BY %s
 		LIMIT %d, %d`, 
-		table_name("comment"), status,
+		table_name("comment"), status, cfg.wheres,
 		orderby, offset, limit
 	)
 	items, _ := db.get_rows(global.conn, query)
@@ -51,6 +53,21 @@ get_comment :: proc(id: string) -> map[string]string {
 
 get_comment_count :: proc() -> string {
 	query := fmt.tprintf("SELECT count(id) as n FROM %s LIMIT 1", table_name("comment"))
+	item, _ := db.get_one(global.conn, query)
+
+	return item["n"]
+}
+
+get_comment_count_where :: proc(cfg: Comment_Where) -> string {
+	status := ""
+	if cfg.status == 0 || cfg.status == 1 {
+		status = fmt.tprintf("AND status = '%s'", cfg.status)
+	}
+
+	query := fmt.tprintf(
+		"SELECT count(id) as n FROM %s WHERE 1=1 %s %s LIMIT 1", 
+		table_name("comment"), status, cfg.wheres
+	)
 	item, _ := db.get_one(global.conn, query)
 
 	return item["n"]

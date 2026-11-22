@@ -1,0 +1,100 @@
+{% extends 'index/common/base.html' %}
+
+{% block style %}
+<style>
+.blog-page-item {
+    border-bottom: 1px solid #edeeef;
+}
+</style>
+{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="blog-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    最新文章
+                </div>
+                <div class="panel-body">
+                    <div class="blog-page-items">
+                        {% for item in list %}
+                        <div class="media blog-page-item">
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    <a href="/art/{{ item.id }}">
+                                        {{ item.title }}
+                                    </a>
+                                </h4>
+                                
+                                <p class="text-muted">
+                                    <span class="blog-datetime">
+                                        <i class="fa fa-clock-o" aria-hidden="true"></i>  
+                                        {{ time_format(item.add_time) }}
+                                    </span>
+
+                                    <span class="blog-author ml-3">
+                                        <i class="fa fa-user" aria-hidden="true"></i>  
+                                        {{ item.username }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div style="text-align: center;color: #606163;">
+                            无文章
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if pages > 1 %} 
+                    <div class="blog-page">
+                        <nav aria-label="Page navigation">
+                            <ul class="pager">
+                                {% if (page > 1 and pages > 1) %}
+                                    <li><a href="/?page={{ page1 }}">上一页</a></li>
+                                {% else %}
+                                    <li class="disabled"><a href="#">上一页</a></li>
+                                {% endif %}
+
+                                {% if (page < pages and pages > 1) %}
+                                    <li><a href="/?page={{ page2 }}">下一页</a></li>
+                                {% else %}
+                                    <li class="disabled"><a href="#">下一页</a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                文章分类
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-pills nav-stacked">
+                    {% for item in cates %}
+                        <li role="presentation" class="cate-index"><a href="/cate/{{ item.slug }}">{{ item.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/blog/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+    $(".top-nav-item.top-nav-home").addClass("active");
+});
+</script>
+{% endblock %}
