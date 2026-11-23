@@ -33,10 +33,14 @@
         <dl class="layui-nav-child">
           <!-- 二级菜单 -->
           <dd>
-            <a onclick="WeAdminShow('新增文章','/admin/art/create')"><i class="layui-icon layui-icon-list"></i>文章</a>
+            <a href="javascript:void();" onclick="WeAdminShow('新增文章','/admin/art/create')">
+              <i class="layui-icon layui-icon-list"></i>文章
+            </a>
           </dd>
           <dd>
-            <a onclick="WeAdminShow('新增分类','/admin/cate/create')"><i class="layui-icon layui-icon-user"></i>分类</a>
+            <a href="javascript:void();" onclick="WeAdminShow('新增分类','/admin/cate/create')">
+              <i class="layui-icon layui-icon-user"></i>分类
+            </a>
           </dd>
         </dl>
       </li>
@@ -89,6 +93,14 @@
     <div class="copyright">Copyright ©2026 Oryn-Blog v1.0 All Rights Reserved</div>
   </div>
   <!-- 底部结束 -->
+
+  <!--Tab菜单右键弹出菜单-->
+  <ul class="rightMenu" id="rightMenu">
+    <li data-type="fresh">刷新</li>
+    <li data-type="current">关闭当前</li>
+    <li data-type="other">关闭其它</li>
+    <li data-type="all">关闭所有</li>
+  </ul>
   
   <script type="text/javascript">
     var showFooter = true; // 控制是否显示底部示例参数，相关逻辑可删除
@@ -124,13 +136,5 @@
 
   </script>
 </body>
-
-<!--Tab菜单右键弹出菜单-->
-<ul class="rightMenu" id="rightMenu">
-  <li data-type="fresh">刷新</li>
-  <li data-type="current">关闭当前</li>
-  <li data-type="other">关闭其它</li>
-  <li data-type="all">关闭所有</li>
-</ul>
 
 </html>

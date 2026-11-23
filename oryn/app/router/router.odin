@@ -17,7 +17,7 @@ index_route :: proc(app: ^gh.App) {
 	gh.get(app, "/", index.index)
 	gh.get(app, "/cate/:slug", index.cate)
 	gh.get(app, "/art/:id", index.art)
-	gh.post(app, "/comment", index.comment_create)
+	gh.post(app, "/comment/create", index.comment_create)
 }
 
 admin_route :: proc(app: ^gh.App) {

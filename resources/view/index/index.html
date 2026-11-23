@@ -28,7 +28,12 @@
                                 </h4>
                                 
                                 <p class="text-muted">
-                                    <span class="blog-datetime">
+                                    <span class="blog-cate">
+                                        <i class="fa fa-file" aria-hidden="true"></i>  
+                                        {{ item.cate_name }}
+                                    </span>
+
+                                    <span class="blog-datetime ml-3">
                                         <i class="fa fa-clock-o" aria-hidden="true"></i>  
                                         {{ time_format(item.add_time) }}
                                     </span>

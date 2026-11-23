@@ -61,7 +61,7 @@ get_comment_count :: proc() -> string {
 get_comment_count_where :: proc(cfg: Comment_Where) -> string {
 	status := ""
 	if cfg.status == 0 || cfg.status == 1 {
-		status = fmt.tprintf("AND status = '%s'", cfg.status)
+		status = fmt.tprintf("AND status = '%d'", cfg.status)
 	}
 
 	query := fmt.tprintf(

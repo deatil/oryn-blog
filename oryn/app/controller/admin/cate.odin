@@ -45,6 +45,7 @@ cate_data :: proc(b: ^gh.Bifrost) {
 		offset = (new_page - 1) * 10,
         limit = new_limit,
 		status = -1,
+		orderby = "sort DESC, add_time DESC",
 	})
 
 	count := model.get_cate_count()

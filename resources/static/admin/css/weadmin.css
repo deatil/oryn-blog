@@ -37,8 +37,9 @@ body {
 .rightMenu li {
   display: block;
   padding: 4px 10px;
-  color: #CCC;
+  color: #646060;;
   border-bottom: 1px solid #F2F2F2;
+  cursor: pointer;
 }
 .rightMenu li:hover {
   background: #EEE;

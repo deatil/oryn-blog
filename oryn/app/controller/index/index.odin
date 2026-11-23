@@ -46,6 +46,7 @@ index :: proc(b: ^gh.Bifrost) {
 		jinja.set(d, "from", jinja.str(item["from"]))
 		jinja.set(d, "views", jinja.str(item["views"]))
 		jinja.set(d, "username", jinja.str(item["username"]))
+		jinja.set(d, "cate_name", jinja.str(item["cate_name"]))
 		jinja.set(d, "is_top", jinja.str(item["is_top"]))
 		jinja.set(d, "add_time", jinja.str(item["add_time"]))
 
@@ -177,6 +178,7 @@ art :: proc(b: ^gh.Bifrost) {
 	jinja.set(ctx, "views", jinja.str(item["views"]))
 	jinja.set(ctx, "is_top", jinja.str(item["is_top"]))
 	jinja.set(ctx, "status", jinja.str(item["status"]))
+	jinja.set(ctx, "add_time", jinja.str(item["add_time"]))
 
 	// comment list
 	page, _ := gh.query_param(b, "page")
@@ -191,6 +193,7 @@ art :: proc(b: ^gh.Bifrost) {
 		wheres = fmt.tprintf("AND art_id = '%s'", item["id"]),
         limit = 10,
 		status = 1,
+		orderby = "add_time ASC",
 	})
 
 	count := model.get_comment_count_where(model.Comment_Where{
@@ -213,17 +216,39 @@ art :: proc(b: ^gh.Bifrost) {
 		jinja.append_value(comments, d)
 	}
 
+	// user
+	user_info := model.get_user_by_id(item["user_id"])
+
+	user := jinja.dict()
+	jinja.set(user, "id", jinja.str(user_info["id"]))
+	jinja.set(user, "username", jinja.str(user_info["username"]))
+
 	// cate info
 	cate_info := model.get_cate(item["cate_id"])
 
-	cate := get_cate(item["cate_id"])
+	cate := jinja.dict()
+	jinja.set(cate, "name", jinja.str(cate_info["name"]))
+	jinja.set(cate, "slug", jinja.str(cate_info["slug"]))
+
 	cates := get_cates()
 
 	data := jinja.dict()
 	jinja.set(data, "data", ctx)
 	jinja.set(data, "cate", cate)
+	jinja.set(data, "user", user)
+	jinja.set(data, "comment_count", jinja.str(count))
 	jinja.set(data, "comments", comments)
 	jinja.set(data, "cates", cates)
+
+	jinja.set(data, "page", jinja.integer(i64(new_page)))
+	jinja.set(data, "pages", jinja.integer(i64(pages)))
+
+    if new_page > 1 && pages > 1 {
+		jinja.set(data, "page1", jinja.integer(i64(new_page) - 1))
+    }
+    if new_page < int(pages) && pages > 1 {
+		jinja.set(data, "page2", jinja.integer(i64(new_page) + 1))
+    }
 
 	output, err := view.render("index/art.html", data)
 	if err != "" {
@@ -235,14 +260,13 @@ art :: proc(b: ^gh.Bifrost) {
 }
 
 comment_create :: proc(b: ^gh.Bifrost) {
-	art_id, ok := gh.query_param(b, "art_id")
-	if !ok {
+	fields := gh.form(b)
+
+	art_id := fields["art_id"]
+	if art_id == "" {
 		view.return_error(b, "文章ID不能为空")
 		return
 	}
-
-	fields := gh.form(b)
-
 	content := fields["content"]
 	if content == "" {
 		view.return_error(b, "评论不能为空")
@@ -254,6 +278,8 @@ comment_create :: proc(b: ^gh.Bifrost) {
 	data["content"] = fields["content"]
 	data["username"] = fields["username"]
 	data["status"] = "1"
+	data["add_time"] = fmt.tprintf("%v", time.time_to_unix(time.now()))
+	data["add_ip"] = gh.client_ip(b)
 
 	if !model.add_comment(data) {
 		view.return_error(b, "添加评论失败")

@@ -18,6 +18,19 @@ get_user :: proc(username: string) -> map[string]string {
 	return item
 }
 
+get_user_by_id :: proc(id: string) -> map[string]string {
+	query := fmt.tprintf(
+		"SELECT * FROM %s WHERE id = '%s' LIMIT 1", 
+		table_name("user"), id
+	)
+	item, err := db.get_one(global.conn, query)
+	if err != "" {
+		return nil
+	}
+
+	return item
+}
+
 update_user :: proc(id: string, data: map[string]string) -> bool {
 	set_str := datas_to_string(data)
 

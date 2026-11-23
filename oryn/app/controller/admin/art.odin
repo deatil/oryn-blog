@@ -108,6 +108,7 @@ art_create_save :: proc(b: ^gh.Bifrost) {
 	data["cate_id"] = cate_id
 	data["user_id"] = user_info["id"]
 	data["title"] = title
+	data["status"] = "0"
 	data["add_time"] = fmt.tprintf("%v", time.time_to_unix(time.now()))
 	data["add_ip"] = gh.client_ip(b)
 

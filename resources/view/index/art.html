@@ -1,6 +1,6 @@
-{% extends 'index/common/base' %}
+{% extends 'index/common/base.html' %}
 
-{% block title %}{{ data.blog.title }} - {{ super() }}{% endblock %}
+{% block title %}{{ data.title }} - {{ super() }}{% endblock %}
 
 {% block style %}
 <style>
@@ -18,94 +18,94 @@
 
 {% block container %}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <ol class="breadcrumb">
             <li>
-                <a href="/">
-                    <i class="fa fa-home" aria-hidden="true"></i> 首页
-                </a>
+                <i class="fa fa-home" aria-hidden="true"></i>
+                <a href="/">首页</a>
             </li>
-            <li class="active">话题详情</li>
+            <li class="active">文章详情</li>
         </ol>
         
         <div class="blog-content">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>
-                        {{ data.blog.title }}
+                        {{- data.title -}}
                     </h4>
                     <div class="blog-meta text-muted">
-                        <span class="blog-datetime">
+                        <span class="blog-cate">
+                            <i class="fa fa-file" aria-hidden="true"></i>  
+                            <a href="/cate/{{ cate.slug }}">
+                                {{- cate.name -}}
+                            </a>
+                        </span>
+
+                        <span class="blog-datetime ml-3">
                             <i class="fa fa-clock-o" aria-hidden="true"></i>  
-                            {{ format_time(data.blog.add_time) }}
+                            {{ time_format(data.add_time) }}
                         </span>
                     
                         <span class="blog-author ml-3">
                             <i class="fa fa-user" aria-hidden="true"></i>  
-                            {{ data.blog.username }}
+                            {{ user.username }}
                         </span>
                     </div>
                 </div>
                 <div class="panel-body blog-content-data">
-                    {{ data.blog.content }}
+                    {{ data.content|safe }}
                 </div>
             </div>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    评论列表({{ data.comment_count }})
+                    评论列表({{ comment_count }})
                 </div>
                 <div class="panel-body">
                     <div class="blog-page-items">
-                        {% for comment in data.comments %}
-                        <div class="media blog-page-item">
-                            <div class="media-body">
-                                <p class="text-muted">
-                                    <span class="blog-author">
-                                        <i class="fa fa-user" aria-hidden="true"></i>  
-                                        {{ comment.username }}
-                                    </span>
-                                    <span class="blog-datetime ml-3">
-                                        <i class="fa fa-clock-o" aria-hidden="true"></i>  
-                                        {{ format_time(comment.add_time, "YYYY-MM-DD HH:mm") }}
-                                    </span>
-                                </p>
+                        {% for comment in comments %}
+                            <div class="media blog-page-item">
+                                <div class="media-body">
+                                    <p class="text-muted">
+                                        <span class="blog-author">
+                                            <i class="fa fa-user" aria-hidden="true"></i>  
+                                            {{ comment.username }}
+                                        </span>
+                                        <span class="blog-datetime ml-3">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i>  
+                                            {{ time_format(comment.add_time) }}
+                                        </span>
+                                    </p>
 
-                                <div class="media-content blog-comment-content">
-                                    {{ comment.content }}
+                                    <div class="media-content blog-comment-content">
+                                        {{ comment.content }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {% endfor %}
-
-                        {% if data.comment_count == 0 %}
+                        {% else %}
                             <div class="text-center">
                                 无数据
                             </div>
-                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
 
-            {% if data.comment_pages > 1 %}
+            {% if pages > 1 %}
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="blog-page">
                             <nav aria-label="Page navigation">
                                 <ul class="pager" style="margin:0;text-align:left;">
-                                    {% if (data.comment_page > 1 and data.comment_pages > 1) %}
-                                        <li><a href="/blog/{{ data.blog.id }}?page={{ data.comment_page1 }}">上一页</a></li>
-                                    {% endif %}
-
-                                    {% if (data.comment_page > 1 and data.comment_pages > 1) == false %}
+                                    {% if (page > 1 and pages > 1) %}
+                                        <li><a href="/art/{{ data.id }}?page={{ page1 }}">上一页</a></li>
+                                    {% else %}
                                         <li class="disabled"><a href="#">上一页</a></li>
                                     {% endif %}
 
-                                    {% if (data.comment_page < data.comment_pages and data.comment_pages > 1) %}
-                                        <li><a href="/blog/{{ data.blog.id }}?page={{ data.comment_page2 }}">下一页</a></li>
-                                    {% endif %}
-
-                                    {% if (data.comment_page < data.comment_pages and data.comment_pages > 1) == false %}
+                                    {% if (page < pages and pages > 1) %}
+                                        <li><a href="/art/{{ data.id }}?page={{ page2 }}">下一页</a></li>
+                                    {% else %}
                                         <li class="disabled"><a href="#">下一页</a></li>
                                     {% endif %}
                                 </ul>
@@ -128,7 +128,15 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="art_id" value="{{ data.blog.id }}" />
+                        <div class="form-group">
+                            <label for="blog-username" class="col-sm-2 text-right">昵称</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="username" value="" 
+                                    class="form-control" id="blog-username" placeholder="请填写你的昵称">
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="art_id" value="{{ data.id }}" />
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
@@ -142,18 +150,17 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                快捷操作
+                文章分类
             </div>
-            <div class="panel-body text-center">
-                <a href="/blog/create"
-                    class="btn btn-primary"
-                    style="width: 185px; padding: 13px 0; border-radius:3px"
-                >
-                    创建话题
-                </a>
+            <div class="panel-body">
+                <ul class="nav nav-pills nav-stacked">
+                    {% for item in cates %}
+                        <li role="presentation" class="cate-index"><a href="/cate/{{ item.slug }}">{{ item.name }}</a></li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
 
@@ -176,16 +183,16 @@ $(function() {
 
         var data = $("#data-form").serialize();
 
-        var url = '/blog/comment/add';
+        var url = '/comment/create';
         $.post(url, data, function(data) {
             if (data.code == 0) {
-                layer.msg(data.msg);
+                layer.msg(data.message);
                 
                 setTimeout(function() {
                     location.reload();
                 }, 1000);
             } else {
-                layer.msg(data.msg);
+                layer.msg(data.message);
             }
         }).fail(function (xhr, status, info) {
             layer.msg("请求失败");

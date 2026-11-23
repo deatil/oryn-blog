@@ -27,7 +27,7 @@ main :: proc() {
 
 	// Middleware ("runes"), registered onion-style, outermost first.
 	gh.rune(&app, gh.logger)
-	gh.rune(&app, middleware.admin_auth)
+	gh.rune(&app, middleware.user_auth)
 
 	global.conn = db.init()
 	defer db.close(global.conn)
@@ -39,6 +39,7 @@ main :: proc() {
 	global.view = &env
 	defer jinja.destroy_environment(global.view)
 
+	view.set_global_value()
 	view.add_functions()
 
 	app_router.route(&app)

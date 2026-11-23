@@ -21,18 +21,18 @@ get_cates :: proc(cfg: Cate_Where) -> []map[string]string {
 	if limit <= 0 {
 		limit = 10
 	}
-	status := "1 = 1"
+	status := ""
 	if cfg.status != -1 {
-		status = fmt.tprintf("status = %d", cfg.status)
+		status = fmt.tprintf("AND status = %d", cfg.status)
 	}
 	orderby := cfg.orderby
 	if orderby == "" {
-		orderby = "add_time DESC"
+		orderby = "sort DESC, add_time DESC"
 	}
 
 	query := fmt.tprintf(
 		`SELECT * FROM %s 
-		WHERE %s ORDER BY %s 
+		WHERE 1 = 1 %s ORDER BY %s 
 		LIMIT %d, %d`, 
 		table_name("cate"), status,
 		orderby, offset, limit
@@ -46,7 +46,7 @@ get_cate_all :: proc() -> []map[string]string {
 	query := fmt.tprintf(
 		`SELECT * FROM %s 
 		WHERE status = 1 
-		ORDER BY add_time DESC`, 
+		ORDER BY sort DESC, add_time DESC`, 
 		table_name("cate")
 	)
 	items, _ := db.get_rows(global.conn, query)
@@ -57,7 +57,7 @@ get_cate_all :: proc() -> []map[string]string {
 get_cate_all2 :: proc() -> []map[string]string {
 	query := fmt.tprintf(
 		`SELECT * FROM %s 
-		ORDER BY add_time DESC`, 
+		ORDER BY sort DESC, add_time DESC`, 
 		table_name("cate")
 	)
 	items, _ := db.get_rows(global.conn, query)
