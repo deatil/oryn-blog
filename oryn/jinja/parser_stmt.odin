@@ -138,7 +138,11 @@ parse_if :: proc(p: ^Parser) -> ^Node {
     for !failed(p) {
         node.a = parse_tuple(p, with_condexpr = false)
         expect(p, .Block_End, "")
-        node.body = subparse(p, {"elif", "else", "endif"})
+        stops := make([]string, 3)
+        stops[0] = "elif"
+        stops[1] = "else"
+        stops[2] = "endif"
+        node.body = subparse(p, stops)
         t := next_token(p)
         if t.text == "elif" {
             levels += 1
@@ -153,7 +157,9 @@ parse_if :: proc(p: ^Parser) -> ^Node {
         }
         if t.text == "else" {
             expect(p, .Block_End, "")
-            node.else_body = subparse(p, {"endif"})
+            stops := make([]string, 1)
+            stops[0] = "endif"
+            node.else_body = subparse(p, stops)
             next_token(p)
         }
         expect(p, .Block_End, "")
@@ -177,11 +183,16 @@ parse_for :: proc(p: ^Parser) -> ^Node {
     }
     expect(p, .Block_End, "")
     p.loop_depth += 1
-    n.body = subparse(p, {"endfor", "else"})
+    stops := make([]string, 2)
+    stops[0] = "endfor"
+    stops[1] = "else"
+    n.body = subparse(p, stops)
     p.loop_depth -= 1
     if next_token(p).text == "else" {
         expect(p, .Block_End, "")
-        n.else_body = subparse(p, {"endfor"})
+        stops := make([]string, 1)
+        stops[0] = "endfor"
+        n.else_body = subparse(p, stops)
         next_token(p)
     }
     expect(p, .Block_End, "")
@@ -256,7 +267,9 @@ parse_set :: proc(p: ^Parser) -> ^Node {
     n.a = target
     if at(p, "|") do n.c = parse_filter(p, nil)
     expect(p, .Block_End, "")
-    n.body = subparse(p, {"endset"})
+    stops := make([]string, 1)
+    stops[0] = "endset"
+    n.body = subparse(p, stops)
     end_tag(p)
     return n
 }
@@ -315,7 +328,9 @@ parse_macro :: proc(p: ^Parser) -> ^Node {
     expect(p, .Block_End, "")
     depth := p.loop_depth
     p.loop_depth = 0
-    n.body = subparse(p, {"endmacro"})
+    stops := make([]string, 1)
+    stops[0] = "endmacro"
+    n.body = subparse(p, stops)
     p.loop_depth = depth
     end_tag(p)
     mark_uses(p, n)
@@ -330,7 +345,9 @@ parse_call_block :: proc(p: ^Parser) -> ^Node {
     expect(p, .Block_End, "")
     depth := p.loop_depth
     p.loop_depth = 0
-    n.body = subparse(p, {"endcall"})
+    stops := make([]string, 1)
+    stops[0] = "endcall"
+    n.body = subparse(p, stops)
     p.loop_depth = depth
     end_tag(p)
     mark_uses(p, n)
@@ -341,7 +358,9 @@ parse_filter_block :: proc(p: ^Parser) -> ^Node {
     n := make_node(p, .Filter_Block, next_token(p).line)
     n.a = parse_filter(p, nil, start_inline = true)
     expect(p, .Block_End, "")
-    n.body = subparse(p, {"endfilter"})
+    stops := make([]string, 1)
+    stops[0] = "endfilter"
+    n.body = subparse(p, stops)
     end_tag(p)
     return n
 }
@@ -359,7 +378,9 @@ parse_with :: proc(p: ^Parser) -> ^Node {
     expect(p, .Block_End, "")
     n.args = targets[:]
     n.values = values[:]
-    n.body = subparse(p, {"endwith"})
+    stops := make([]string, 1)
+    stops[0] = "endwith"
+    n.body = subparse(p, stops)
     end_tag(p)
     return n
 }
@@ -377,7 +398,9 @@ parse_block :: proc(p: ^Parser) -> ^Node {
     expect(p, .Block_End, "")
     depth := p.loop_depth
     p.loop_depth = 0
-    n.body = subparse(p, {"endblock"})
+    stops := make([]string, 1)
+    stops[0] = "endblock"
+    n.body = subparse(p, stops)
     p.loop_depth = depth
     next_token(p)
     if at(p, n.text) && peek(p).kind == .Name {
@@ -409,7 +432,9 @@ parse_simple :: proc(p: ^Parser) -> ^Node {
     n.a = parse_tuple(p) if kind == .Do else parse_expr(p)
     expect(p, .Block_End, "")
     if kind == .Autoescape {
-        n.body = subparse(p, {"endautoescape"})
+        stops := make([]string, 1)
+        stops[0] = "endautoescape"
+        n.body = subparse(p, stops)
         end_tag(p)
     }
     return n

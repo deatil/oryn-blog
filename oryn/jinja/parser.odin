@@ -49,17 +49,17 @@ parse :: proc(env: ^Environment, source, name: string, guard: ^Guard) -> (^Compi
 
 // parse_expression_source parses a single expression (compile_expression in Jinja).
 parse_expression_source :: proc(env: ^Environment, source, name: string, guard: ^Guard) ->
-    (^Node, Error) {
+    (n: ^Node, err: Error) {
     tokens, lex_err := tokenize(strings.concatenate({"{{ ", source, " }}"}), name, {})
     if guard.refused > 0 || len(tokens) == 0 && lex_err.kind == .None {
-        err := parse_memory_error(guard, 1)
+        err = parse_memory_error(guard, 1)
         err.template = name
         return nil, err
     }
     if lex_err.kind != .None do return nil, lex_err
     p := new_parser(env, tokens, name, guard)
     expect(&p, .Variable_Begin, "")
-    n := parse_tuple(&p)
+    n = parse_tuple(&p)
     expect(&p, .Variable_End, "")
     if peek(&p).kind != .EOF do fail_unexpected(&p)
     if failed(&p) {
