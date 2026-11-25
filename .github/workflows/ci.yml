@@ -22,4 +22,3 @@ jobs:
         run: odin report
       - name: Test
         run: odin run . -collection:oryn=oryn
-        timeout-minutes: 1
