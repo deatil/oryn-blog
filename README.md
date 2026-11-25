@@ -12,7 +12,7 @@
 
 ### 环境要求
 
- - odin >= dev-2026-10-nightly
+ - odin >= dev-2026-11a
  - Myzql
 
 
